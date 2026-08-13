@@ -1,0 +1,65 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id             String   @id
+  email          String   @unique
+  name           String
+  role           String   // STUDENT, TEACHER, ADMIN
+  avatar         String?
+  items          Item[]   @relation("ItemReporter")
+  claims         Claim[]  @relation("Claimant")
+  reviewedClaims Claim[]  @relation("ClaimReviewer")
+  createdAt      DateTime @default(now())
+}
+
+model Item {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  category     String
+  type         String   // LOST, FOUND
+  status       String   // OPEN, MATCHED, CLAIMED, CLOSED
+  location     String
+  imagePreset  String?
+  imageUrl     String?
+  aiTags       String?  // Comma-separated tags (e.g. "phone,apple,black")
+  reporterId   String
+  reporter     User     @relation("ItemReporter", fields: [reporterId], references: [id])
+  claims       Claim[]
+  foundMatches Match[]  @relation("FoundMatches")
+  lostMatches  Match[]  @relation("LostMatches")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Claim {
+  id          String   @id @default(uuid())
+  itemId      String
+  item        Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  claimantId  String
+  claimant    User     @relation("Claimant", fields: [claimantId], references: [id])
+  proofText   String
+  status      String   // PENDING, APPROVED, REJECTED
+  reviewerId  String?
+  reviewer    User?    @relation("ClaimReviewer", fields: [reviewerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Match {
+  id              String   @id @default(uuid())
+  lostItemId      String
+  lostItem        Item     @relation("LostMatches", fields: [lostItemId], references: [id], onDelete: Cascade)
+  foundItemId     String
+  foundItem       Item     @relation("FoundMatches", fields: [foundItemId], references: [id], onDelete: Cascade)
+  similarityScore Float
+  status          String   // SUGGESTED, CONFIRMED, REJECTED
+  createdAt       DateTime @default(now())
+}

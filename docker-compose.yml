@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: finder-portal-backend
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - DATABASE_URL=file:./dev.db
+      - JWT_SECRET=abac_finder_portal_super_secret_key_123
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - MY_PEER_API_KEY=${MY_PEER_API_KEY:-fp_peer_api_key_xyz_998877}
+      - THEIR_PEER_API_KEY=${THEIR_PEER_API_KEY:-sr_peer_token_88192a_sec}
+      - SPACE_RESERVE_API_URL=${SPACE_RESERVE_API_URL:-https://spacereserve.uni.edu/api/v1}
+      - AZURE_KEY_VAULT_URL=${AZURE_KEY_VAULT_URL}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+    volumes:
+      - ./backend/prisma:/usr/src/app/prisma
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: finder-portal-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: always
