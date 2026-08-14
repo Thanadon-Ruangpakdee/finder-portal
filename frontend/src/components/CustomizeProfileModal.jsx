@@ -63,7 +63,7 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
 
   return (
     <div className="modal-overlay">
-      <div className="modal-card glass-card animate-scaleUp" style={{ maxWidth: '420px' }}>
+      <div className="modal-card glass-card animate-scaleUp" style={{ maxWidth: '520px', width: '95%', padding: '24px' }}>
         {/* Modal Header */}
         <div className="modal-header">
           <div className="modal-header-title">
@@ -119,26 +119,15 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
 
           {avatarMode === 'avatar' ? (
             <div className="form-group-stacked animate-fadeIn">
-              <label className="form-label-stacked">Avatar Character Seed</label>
-              <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
-                <input 
-                  type="text"
-                  className="login-form-input"
-                  value={avatarSeed}
-                  onChange={(e) => setAvatarSeed(e.target.value)}
-                  placeholder="e.g. Thanadon, Somchai"
-                  disabled={loading}
-                />
-                <button 
-                  type="button" 
-                  className="btn btn-glass" 
-                  onClick={handleRandomizeSeed}
-                  disabled={loading}
-                >
-                  🎲 Random
-                </button>
-              </div>
-              <span className="form-help-text">Type any text to auto-generate a digital character.</span>
+              <button 
+                type="button" 
+                className="btn btn-glass" 
+                onClick={handleRandomizeSeed}
+                disabled={loading}
+                style={{ width: '100%', gap: '8px', justifyContent: 'center' }}
+              >
+                🎲 Randomize Generated Character
+              </button>
             </div>
           ) : (
             <div className="form-group-stacked animate-fadeIn">

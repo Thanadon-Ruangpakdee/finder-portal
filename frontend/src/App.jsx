@@ -14,6 +14,7 @@ import {
 import { api } from './services/api';
 import LoginPortal from './components/LoginPortal';
 import CustomizeProfileModal from './components/CustomizeProfileModal';
+import SettingsView from './components/SettingsView';
 import { 
   Sparkles, 
   PlusCircle, 
@@ -26,7 +27,7 @@ import {
 
 export default function App() {
   // Theme state
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('light');
 
   // Role & Current User state
   const [currentUser, setCurrentUser] = useState(null);
@@ -115,6 +116,7 @@ export default function App() {
   useEffect(() => {
     if (currentUser) {
       fetchItems();
+      fetchStatsItems();
     }
   }, [searchQuery, selectedCategory, typeFilter, statusFilter, selectedLocation, currentUser]);
 
@@ -437,6 +439,20 @@ export default function App() {
           <PeerApiExplorer 
             items={items}
             initialLocation={peerInitialRoom}
+          />
+        )}
+
+        {/* View 5: Settings panel */}
+        {activeTab === 'settings' && (
+          <SettingsView 
+            currentUser={currentUser}
+            onProfileUpdated={(updatedUser) => {
+              setCurrentUser(updatedUser);
+              showToast('✓ Profile settings updated!');
+            }}
+            theme={theme}
+            setTheme={setTheme}
+            onSignOut={handleSignOut}
           />
         )}
       </main>

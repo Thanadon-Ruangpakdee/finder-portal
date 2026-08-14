@@ -12,7 +12,8 @@ import {
   Layers, 
   UserCheck, 
   Building2, 
-  Lock 
+  Lock,
+  Settings
 } from './Icons';
 import { USER_ROLES, MOCK_USERS } from '../services/store';
 
@@ -110,6 +111,14 @@ export default function Navbar({
               </button>
             </>
           )}
+          <button 
+            className={`nav-tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+            title="Settings & Profile"
+          >
+            <Settings size={16} />
+            <span>Settings</span>
+          </button>
         </nav>
 
         {/* Action Buttons & Right Controls */}
@@ -168,7 +177,7 @@ export default function Navbar({
                   className="role-option-item"
                   onClick={() => {
                     setShowRoleMenu(false);
-                    onOpenProfileModal();
+                    setActiveTab('settings');
                   }}
                 >
                   <div className="role-option-icon" style={{ background: 'rgba(217, 119, 6, 0.15)', color: 'var(--accent-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.82rem' }}>
