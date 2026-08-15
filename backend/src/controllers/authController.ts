@@ -17,25 +17,24 @@ export async function handleAdLogin(req: Request, res: Response) {
   try {
     const config = getConfig();
     
-    // Check if user exists in database, or register them
-    // Use email name prefix as ID
-    const userId = email.split('@')[0];
+    const normalizedEmail = email.toLowerCase().trim();
+    const userId = normalizedEmail.split('@')[0];
     
     // Default role assignment if AD claims don't specify
     let assignedRole = 'STUDENT';
-    if (email.startsWith('staff.') || email.startsWith('teacher.')) assignedRole = 'TEACHER';
-    if (email.startsWith('admin.')) assignedRole = 'ADMIN';
+    if (normalizedEmail.startsWith('staff.') || normalizedEmail.startsWith('teacher.')) assignedRole = 'TEACHER';
+    if (normalizedEmail.startsWith('admin.')) assignedRole = 'ADMIN';
     if (role) assignedRole = role; // Override if requested
 
     let user = await prisma.user.findUnique({
-      where: { id: userId }
+      where: { email: normalizedEmail }
     });
 
     if (!user) {
       user = await prisma.user.create({
         data: {
           id: userId,
-          email,
+          email: normalizedEmail,
           name,
           role: assignedRole,
           avatar: avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${userId}`
