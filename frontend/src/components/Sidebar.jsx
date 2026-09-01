@@ -5,7 +5,8 @@ import {
   Sparkles,
   Globe2,
   Layers,
-  Settings
+  Settings,
+  FileText
 } from './Icons';
 import { USER_ROLES, ITEM_CATEGORIES } from '../services/store';
 import { useT } from '../language';
@@ -108,6 +109,16 @@ export default function Sidebar({
                 <Layers size={17} />
                 <span className="side-nav-grow">{t('Browse')}</span>
               </button>
+
+              {!isStaffOrAdmin && (
+                <button
+                  className={`side-nav-btn ${activeTab === 'claims' ? 'active' : ''}`}
+                  onClick={() => goTo('claims')}
+                >
+                  <FileText size={17} />
+                  <span className="side-nav-grow">{t('My Claims')}</span>
+                </button>
+              )}
 
               {isStaffOrAdmin && (
                 <>

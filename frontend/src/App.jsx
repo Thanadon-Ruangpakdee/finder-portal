@@ -17,6 +17,7 @@ import { useT } from './language';
 import LoginPortal from './components/LoginPortal';
 import CustomizeProfileModal from './components/CustomizeProfileModal';
 import SettingsView from './components/SettingsView';
+import StudentClaimsView from './components/StudentClaimsView';
 import { 
   Sparkles, 
   PlusCircle, 
@@ -454,7 +455,14 @@ export default function App() {
           />
         )}
 
-        {/* View 5: Settings panel */}
+        {/* View 5: Student Claims Tracker */}
+        {activeTab === 'claims' && (
+          <StudentClaimsView 
+            onViewItem={(item) => setSelectedItem(item)}
+          />
+        )}
+
+        {/* View 6: Settings panel */}
         {activeTab === 'settings' && (
           <SettingsView 
             currentUser={currentUser}

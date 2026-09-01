@@ -23,6 +23,7 @@ const TH = {
   'Location': 'สถานที่',
   'Clear all filters': 'ล้างตัวกรองทั้งหมด',
   'Browse': 'ดูรายการ',
+  'My Claims': 'คำร้องของฉัน',
   'Staff Dash': 'แผงอาจารย์',
   'Admin Dash': 'แผงผู้ดูแลระบบ',
   'AI Matcher': 'จับคู่ด้วย AI',
@@ -32,6 +33,14 @@ const TH = {
   'Auto': 'อัตโนมัติ',
   'Peer': 'เชื่อมต่อ',
   'Open / close menu': 'เปิด/ปิดเมนู',
+  'Track the status of your ownership verification claims': 'ติดตามสถานะคำร้องยื่นขอรับของคืนของคุณ',
+  'No Claims Submitted Yet': 'ยังไม่มีรายการคำร้องที่ยื่น',
+  'You have not submitted any ownership claims for found items yet.': 'คุณยังไม่ได้ยื่นหลักฐานแสดงความเป็นเจ้าของสำหรับสิ่งของที่พบ',
+  'Submitted Proof of Ownership': 'หลักฐานที่ยื่นแสดงความเป็นเจ้าของ',
+  'Claim Status': 'สถานะคำร้อง',
+  'Pending Teacher Review': 'กำลังรออาจารย์ตรวจสอบ',
+  'Approved - Contact Staff to Collect': 'อนุมัติแล้ว - ติดต่อรับของคืนได้ที่สาขา',
+  'Claim Rejected': 'คำร้องถูกปฏิเสธ',
 
   // ---------- หมวดหมู่ ----------
   'All': 'ทั้งหมด',
