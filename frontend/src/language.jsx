@@ -41,6 +41,9 @@ const TH = {
   'Pending Teacher Review': 'กำลังรออาจารย์ตรวจสอบ',
   'Approved - Contact Staff to Collect': 'อนุมัติแล้ว - ติดต่อรับของคืนได้ที่สาขา',
   'Claim Rejected': 'คำร้องถูกปฏิเสธ',
+  'Claim Already Submitted': 'ยื่นคำร้องเรียบร้อยแล้ว',
+  'Your Claim is Under Review': 'คำร้องของคุณอยู่ระหว่างการตรวจสอบ',
+  'Claim Approved! Contact Staff to Collect': 'อนุมัติแล้ว - ติดต่อรับของคืนได้ที่สาขา',
 
   // ---------- หมวดหมู่ ----------
   'All': 'ทั้งหมด',

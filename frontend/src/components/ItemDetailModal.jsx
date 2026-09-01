@@ -223,24 +223,78 @@ export default function ItemDetailModal({
               </p>
 
               {userClaim ? (
-                <div className="claim-status-banner">
-                  <CheckCircle size={20} className="text-emerald" />
-                  <div>
-                    <div className="font-semibold">{t('Your Claim is Under Review')}</div>
-                    <div className="text-muted text-sm">
-                      {t('Proof submitted:')} "{userClaim.proofText || userClaim.proofDescription}" — {t('Status:')} <strong>{t(userClaim.status)}</strong>
+                <div>
+                  <div className="claim-status-banner" style={{ marginBottom: '14px' }}>
+                    <CheckCircle size={20} className="text-emerald" />
+                    <div>
+                      <div className="font-semibold">
+                        {userClaim.status === 'PENDING' && t('Your Claim is Under Review')}
+                        {userClaim.status === 'APPROVED' && t('Claim Approved! Contact Staff to Collect')}
+                        {userClaim.status === 'REJECTED' && t('Claim Rejected')}
+                        {(!userClaim.status || (userClaim.status !== 'PENDING' && userClaim.status !== 'APPROVED' && userClaim.status !== 'REJECTED')) && t('Your Claim is Under Review')}
+                      </div>
+                      <div className="text-muted text-sm">
+                        {t('Status:')} <strong>{t(userClaim.status || 'PENDING')}</strong>
+                      </div>
                     </div>
                   </div>
+
+                  <div className="input-group">
+                    <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+                      <CheckCircle size={15} className="text-emerald" />
+                      <span>{t('Submitted Proof of Ownership')}</span>
+                    </label>
+                    <textarea
+                      className="textarea-field"
+                      value={userClaim.proofText || userClaim.proofDescription || ''}
+                      readOnly
+                      disabled
+                      style={{ opacity: 0.95, background: 'var(--bg-input)', cursor: 'not-allowed', color: 'var(--text-primary)', fontWeight: 500 }}
+                    />
+                  </div>
+
+                  <button 
+                    type="button" 
+                    className="btn w-full"
+                    disabled
+                    style={{ marginTop: '14px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)', opacity: 1, cursor: 'not-allowed', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', padding: '10px' }}
+                  >
+                    <CheckCircle size={16} />
+                    <span>{t('Claim Already Submitted')}</span>
+                  </button>
                 </div>
               ) : claimSubmitted ? (
-                <div className="claim-status-banner success-banner">
-                  <CheckCircle size={20} className="text-emerald" />
-                  <div>
-                    <div className="font-semibold">{t('Claim Request Submitted Successfully!')}</div>
-                    <div className="text-muted text-sm">
-                      {t('Teacher has been notified. Check your student email for approval notifications.')}
+                <div>
+                  <div className="claim-status-banner success-banner" style={{ marginBottom: '14px' }}>
+                    <CheckCircle size={20} className="text-emerald" />
+                    <div>
+                      <div className="font-semibold">{t('Claim Request Submitted Successfully!')}</div>
+                      <div className="text-muted text-sm">
+                        {t('Teacher has been notified. Check your student email for approval notifications.')}
+                      </div>
                     </div>
                   </div>
+
+                  <div className="input-group">
+                    <label className="input-label">{t('Submitted Proof of Ownership')}</label>
+                    <textarea
+                      className="textarea-field"
+                      value={claimProof}
+                      readOnly
+                      disabled
+                      style={{ opacity: 0.95, background: 'var(--bg-input)', cursor: 'not-allowed', color: 'var(--text-primary)', fontWeight: 500 }}
+                    />
+                  </div>
+
+                  <button 
+                    type="button" 
+                    className="btn w-full"
+                    disabled
+                    style={{ marginTop: '14px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)', opacity: 1, cursor: 'not-allowed', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', padding: '10px' }}
+                  >
+                    <CheckCircle size={16} />
+                    <span>{t('Claim Already Submitted')}</span>
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleClaimSubmit} className="claim-form">
