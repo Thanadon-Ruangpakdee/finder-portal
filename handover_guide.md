@@ -49,8 +49,10 @@ Make sure you have [Node.js](https://nodejs.org/) installed (v18+ recommended).
    cd backend
    npm install
    
-   # Setup and seed local SQLite Database
+   # 1) Ensure local .env exists (PORT=5001, DATABASE_URL="file:./dev.db")
+   # 2) Setup database tables and seed mock data
    npx prisma generate
+   npx prisma migrate deploy
    npm run prisma:seed
    
    # Start backend development server (Runs on http://localhost:5001)
