@@ -33,7 +33,7 @@ export default function ItemDetailModal({
 
   const isFound = item.type === 'FOUND';
   const isTeacherOrAdmin = currentRole === USER_ROLES.TEACHER || currentRole === USER_ROLES.ADMIN;
-  const userClaim = item.claims?.find(c => c.userId === currentUser?.id);
+  const userClaim = item.claims?.find(c => c.claimantId === currentUser?.id || c.userId === currentUser?.id);
 
   const handleClaimSubmit = (e) => {
     e.preventDefault();
@@ -228,7 +228,7 @@ export default function ItemDetailModal({
                   <div>
                     <div className="font-semibold">{t('Your Claim is Under Review')}</div>
                     <div className="text-muted text-sm">
-                      {t('Proof submitted:')} "{userClaim.proofDescription}" — {t('Status:')} <strong>{t(userClaim.status)}</strong>
+                      {t('Proof submitted:')} "{userClaim.proofText || userClaim.proofDescription}" — {t('Status:')} <strong>{t(userClaim.status)}</strong>
                     </div>
                   </div>
                 </div>
