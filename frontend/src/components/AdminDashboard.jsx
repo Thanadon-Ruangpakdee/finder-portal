@@ -172,51 +172,92 @@ export default function AdminDashboard({
             <span>{t('No claim verifications pending review right now.')}</span>
           </div>
         ) : (
-          <div className="claims-review-grid">
-            {pendingClaimsList.map((claim) => (
-              <div key={claim.id} className="claim-review-row glass-card">
-                {/* Item Thumbnail */}
-                <img src={claim.item.photoUrl} alt="" className="claim-item-thumb" />
+          <div className="claims-review-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {pendingClaimsList.map((claim) => {
+              const item = claim.item || {};
+              const studentName = claim.claimant?.name || claim.userName || claim.claimantId || t('Student');
+              const studentEmail = claim.claimant?.email || claim.userEmail || (claim.claimantId ? `${claim.claimantId}@ms.au.edu` : 'student@au.edu');
+              const proofText = claim.proofText || claim.proofDescription || t('No proof description provided');
+              const itemPhoto = item.photoUrl || item.imageUrl || 'https://images.unsplash.com/photo-1586769852044-692d6e3703f0?w=800&auto=format&fit=crop&q=80';
+              const itemTitle = item.title || t('Unknown Item');
+              const itemCategory = item.category || 'General';
+              const itemLocation = item.location || '';
 
-                {/* Claim details */}
-                <div className="claim-detail-main">
-                  <div className="claim-item-title">{t('Claim for:')} <strong>{claim.item.title}</strong></div>
-                  
-                  <div className="claim-user-meta">
-                    <div className="meta-item">
-                      <User size={13} />
-                      <span>{claim.userName}</span>
+              return (
+                <div key={claim.id} className="glass-card" style={{ padding: '20px', borderRadius: 'var(--radius-lg)', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '130px 1fr auto', gap: '20px', alignItems: 'start' }}>
+                    {/* Item Thumbnail */}
+                    <div style={{ width: '130px', height: '115px', borderRadius: 'var(--radius-md)', overflow: 'hidden', position: 'relative', background: '#000' }}>
+                      <img src={itemPhoto} alt={itemTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <span className="badge badge-found" style={{ position: 'absolute', bottom: 6, left: 6, fontSize: '0.68rem', padding: '2px 6px', zIndex: 2 }}>
+                        {t(itemCategory)}
+                      </span>
                     </div>
-                    <div className="meta-item">
-                      <Mail size={13} />
-                      <span>{claim.userEmail}</span>
+
+                    {/* Main Details Block */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                          {t('Claim for:')} <span style={{ color: 'var(--primary)' }}>{itemTitle}</span>
+                        </h3>
+                        <span className="badge" style={{ background: '#f59e0b', color: '#ffffff', fontSize: '0.72rem', padding: '3px 8px', border: '1px solid #d97706' }}>
+                          <Clock size={12} /> {t('Pending Review')}
+                        </span>
+                      </div>
+
+                      {/* Student Metadata Pill Box */}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', fontSize: '0.84rem', color: 'var(--text-secondary)', background: 'var(--bg-input)', padding: '8px 14px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                          <User size={15} className="text-primary" />
+                          <span>{studentName}</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Mail size={15} className="text-muted" />
+                          <span>{studentEmail}</span>
+                        </div>
+                        {itemLocation && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <MapPin size={15} className="text-cyan" />
+                            <span>{itemLocation}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Submitted Proof Box */}
+                      <div style={{ background: 'rgba(59, 130, 246, 0.06)', padding: '12px 16px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <FileText size={14} />
+                          <span>{t('Submitted Proof of Ownership')}</span>
+                        </div>
+                        <p style={{ fontSize: '0.92rem', color: 'var(--text-primary)', margin: 0, lineHeight: 1.5, wordBreak: 'break-word', fontWeight: 500 }}>
+                          "{proofText}"
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Verification Actions */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', minWidth: '160px' }}>
+                      <button 
+                        className="btn btn-success"
+                        style={{ padding: '10px 16px', justifyContent: 'center', fontWeight: 600, width: '100%' }}
+                        onClick={() => handleApprove(item.id, claim.id, studentName)}
+                      >
+                        <CheckCircle size={16} />
+                        <span>{t('Approve & Return')}</span>
+                      </button>
+                      <button 
+                        className="btn btn-danger"
+                        style={{ padding: '10px 16px', justifyContent: 'center', fontWeight: 600, width: '100%' }}
+                        onClick={() => handleReject(item.id, claim.id, studentName)}
+                      >
+                        <XCircle size={16} />
+                        <span>{t('Reject')}</span>
+                      </button>
                     </div>
                   </div>
-
-                  <p className="claim-proof-text">
-                    <strong>{t('Submitted Proof:')}</strong> "{claim.proofDescription}"
-                  </p>
                 </div>
-
-                {/* Verification Actions */}
-                <div className="claim-action-buttons">
-                  <button 
-                    className="btn btn-success btn-sm w-full"
-                    onClick={() => handleApprove(claim.item.id, claim.id, claim.userName)}
-                  >
-                    <CheckCircle size={15} />
-                    <span>{t('Approve & Return')}</span>
-                  </button>
-                  <button 
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleReject(claim.item.id, claim.id, claim.userName)}
-                  >
-                    <XCircle size={15} />
-                    <span>{t('Reject')}</span>
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
