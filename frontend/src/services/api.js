@@ -15,10 +15,16 @@ function getAuthHeaders() {
 // Maps backend schema (imageUrl, aiTags as string) to frontend schema (photoUrl, aiTags as array)
 function mapItemResponse(item) {
   if (!item) return null;
+  let tagsArray = [];
+  if (Array.isArray(item.aiTags)) {
+    tagsArray = item.aiTags;
+  } else if (typeof item.aiTags === 'string') {
+    tagsArray = item.aiTags.split(',').map(t => t.trim()).filter(Boolean);
+  }
   return {
     ...item,
-    photoUrl: item.imageUrl || 'https://images.unsplash.com/photo-1586769852044-692d6e3703f0?w=800&auto=format&fit=crop&q=80',
-    aiTags: item.aiTags ? item.aiTags.split(',').filter(Boolean) : []
+    photoUrl: item.imageUrl || item.photoUrl || 'https://images.unsplash.com/photo-1586769852044-692d6e3703f0?w=800&auto=format&fit=crop&q=80',
+    aiTags: tagsArray
   };
 }
 
@@ -140,7 +146,11 @@ export const api = {
       headers: getAuthHeaders()
     });
     if (!response.ok) throw new Error('Failed to fetch claims');
-    return response.json();
+    const claims = await response.json();
+    return claims.map(claim => ({
+      ...claim,
+      item: mapItemResponse(claim.item)
+    }));
   },
 
   async submitClaim(itemId, proofText) {

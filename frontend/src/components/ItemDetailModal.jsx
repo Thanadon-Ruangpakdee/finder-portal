@@ -27,13 +27,13 @@ export default function ItemDetailModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [claimSubmitted, setClaimSubmitted] = useState(false);
   const t = useT();
-  const { lang } = useLang();
+  const lang = useLang();
 
   if (!item) return null;
 
   const isFound = item.type === 'FOUND';
   const isTeacherOrAdmin = currentRole === USER_ROLES.TEACHER || currentRole === USER_ROLES.ADMIN;
-  const userClaim = item.claims?.find(c => c.userId === currentUser.id);
+  const userClaim = item.claims?.find(c => c.userId === currentUser?.id);
 
   const handleClaimSubmit = (e) => {
     e.preventDefault();
@@ -104,7 +104,7 @@ export default function ItemDetailModal({
           </div>
 
           {/* AI Extracted Tags */}
-          {item.aiTags && item.aiTags.length > 0 && (
+          {Array.isArray(item.aiTags) && item.aiTags.length > 0 && (
             <div className="detail-section ai-tags-section">
               <div className="section-label">
                 <Sparkles size={16} className="text-purple" />
