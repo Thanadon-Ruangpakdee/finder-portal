@@ -10,8 +10,10 @@ import {
   Layers
 } from './Icons';
 import { MOCK_SPACERESERVE_BOOKINGS } from '../services/store';
+import { useT } from '../language';
 
 export default function PeerApiExplorer({ items, initialLocation = '' }) {
+  const t = useT();
   const [activeSubTab, setActiveSubTab] = useState('consume'); // 'consume' (we call them) or 'expose' (they call us)
   
   // Outgoing State (We call SpaceReserve)
@@ -102,13 +104,13 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
       <div className="peer-header-card glass-card">
         <div className="peer-header-badge">
           <Globe2 size={16} className="text-cyan" />
-          <span>Service-to-Service Peer API Architecture</span>
+          <span>{t('Service-to-Service Peer API Architecture')}</span>
         </div>
         <h1 className="peer-title">
-          Finder Portal ⇄ <span className="gradient-text">SpaceReserve</span> API Integration
+          Finder Portal ⇄ <span className="gradient-text">SpaceReserve</span> {t('API Integration')}
         </h1>
         <p className="peer-sub">
-          Test live bilateral communication between the University Lost & Found backend and the SpaceReserve room reservation backend.
+          {t('Test live bilateral communication between the University Lost & Found backend and the SpaceReserve room reservation backend.')}
         </p>
 
         {/* Sub Navigation Segmented Switch */}
@@ -118,7 +120,7 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
             onClick={() => setActiveSubTab('consume')}
           >
             <Server size={17} />
-            <span>1. Outgoing (We Call SpaceReserve)</span>
+            <span>{t('1. Outgoing (We Call SpaceReserve)')}</span>
           </button>
 
           <button 
@@ -126,7 +128,7 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
             onClick={() => setActiveSubTab('expose')}
           >
             <Layers size={17} />
-            <span>2. Incoming (SpaceReserve Calls Us)</span>
+            <span>{t('2. Incoming (SpaceReserve Calls Us)')}</span>
           </button>
         </div>
       </div>
@@ -139,13 +141,13 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
             <div className="panel-header">
               <div className="panel-title">
                 <Send size={18} className="text-cyan" />
-                <span>Outgoing Request Configuration</span>
+                <span>{t('Outgoing Request Configuration')}</span>
               </div>
-              <span className="badge badge-found">GET Request</span>
+              <span className="badge badge-found">{t('GET Request')}</span>
             </div>
 
             <p className="panel-desc">
-              When a found item is recorded, Finder Portal queries SpaceReserve to check who booked that specific room at that time.
+              {t('When a found item is recorded, Finder Portal queries SpaceReserve to check who booked that specific room at that time.')}
             </p>
 
             <div className="api-endpoint-badge">
@@ -154,21 +156,21 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
             </div>
 
             <div className="input-group">
-              <label className="input-label">Select Room to Inquire *</label>
+              <label className="input-label">{t('Select Room to Inquire *')}</label>
               <select 
                 className="select-field"
                 value={selectedRoom}
                 onChange={(e) => setSelectedRoom(e.target.value)}
               >
-                <option value="Room 402 (Engineering Building)">Room 402 (Engineering Building)</option>
-                <option value="Library Room 4B / Music Practice Lab">Library Room 4B / Music Practice Lab</option>
-                <option value="Central Library (3rd Floor)">Central Library (3rd Floor)</option>
-                <option value="Unknown Hallway 101">Unknown Hallway 101 (Non-bookable space)</option>
+                <option value="Room 402 (Engineering Building)">{t('Room 402 (Engineering Building)')}</option>
+                <option value="Library Room 4B / Music Practice Lab">{t('Library Room 4B / Music Practice Lab')}</option>
+                <option value="Central Library (3rd Floor)">{t('Central Library (3rd Floor)')}</option>
+                <option value="Unknown Hallway 101">{t('Unknown Hallway 101 (Non-bookable space)')}</option>
               </select>
             </div>
 
             <div className="input-group">
-              <label className="input-label">Timestamp of Discovery</label>
+              <label className="input-label">{t('Timestamp of Discovery')}</label>
               <input 
                 type="datetime-local"
                 className="input-field"
@@ -180,7 +182,7 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
             <div className="auth-header-preview">
               <div className="auth-label">
                 <Key size={14} />
-                <span>SpaceReserve Authentication Header:</span>
+                <span>{t('SpaceReserve Authentication Header:')}</span>
               </div>
               <code>Authorization: Bearer sr_peer_token_88192a_sec</code>
             </div>
@@ -191,7 +193,7 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
               disabled={outgoingLoading}
             >
               <Send size={16} />
-              <span>{outgoingLoading ? 'Executing Peer Query...' : 'Send Request to SpaceReserve'}</span>
+              <span>{outgoingLoading ? t('Executing Peer Query...') : t('Send Request to SpaceReserve')}</span>
             </button>
           </div>
 
@@ -200,7 +202,7 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
             <div className="panel-header">
               <div className="panel-title">
                 <Code2 size={18} className="text-purple" />
-                <span>SpaceReserve Response Payload</span>
+                <span>{t('SpaceReserve Response Payload')}</span>
               </div>
               {outgoingResponse && (
                 <span className={`badge ${outgoingResponse.statusCode === 200 ? 'badge-claimed' : 'badge-lost'}`}>
@@ -219,9 +221,9 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
                   <div className="peer-match-insight-box">
                     <CheckCircle2 size={18} className="text-emerald" />
                     <div>
-                      <div className="font-semibold text-sm">Owner Lead Discovered:</div>
+                      <div className="font-semibold text-sm">{t('Owner Lead Discovered:')}</div>
                       <div className="text-muted text-xs">
-                        This room was booked by <strong>{outgoingResponse.data.bookedBy}</strong> ({outgoingResponse.data.bookerEmail}) for "{outgoingResponse.data.scheduledEvent}".
+                        {t('This room was booked by')} <strong>{outgoingResponse.data.bookedBy}</strong> ({outgoingResponse.data.bookerEmail}) {t('for')} "{outgoingResponse.data.scheduledEvent}".
                       </div>
                     </div>
                   </div>
@@ -230,8 +232,8 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
             ) : (
               <div className="empty-response-state">
                 <Building2 size={36} className="text-muted" />
-                <div className="empty-title">Awaiting Execution</div>
-                <p className="empty-desc">Click "Send Request" on the left to simulate calling SpaceReserve's REST API.</p>
+                <div className="empty-title">{t('Awaiting Execution')}</div>
+                <p className="empty-desc">{t('Click "Send Request" on the left to simulate calling SpaceReserve\'s REST API.')}</p>
               </div>
             )}
           </div>
@@ -246,34 +248,34 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
             <div className="panel-header">
               <div className="panel-title">
                 <Server size={18} className="text-emerald" />
-                <span>Exposed Endpoint Simulator</span>
+                <span>{t('Exposed Endpoint Simulator')}</span>
               </div>
               <span className="badge badge-found">GET /api/v1/items/by-location</span>
             </div>
 
             <p className="panel-desc">
-              When a student checks in to SpaceReserve, their backend queries Finder Portal to see if any items were left behind in that room.
+              {t('When a student checks in to SpaceReserve, their backend queries Finder Portal to see if any items were left behind in that room.')}
             </p>
 
             <div className="input-group">
-              <label className="input-label">Static API Key (Header: x-api-key) *</label>
+              <label className="input-label">{t('Static API Key (Header: x-api-key) *')}</label>
               <input 
                 type="text"
                 className="input-field font-mono"
                 value={incomingApiKey}
                 onChange={(e) => setIncomingApiKey(e.target.value)}
               />
-              <span className="text-xs text-muted">Valid Key issued to SpaceReserve: <code>sr_live_key_9981x40a9bc</code></span>
+              <span className="text-xs text-muted">{t('Valid Key issued to SpaceReserve:')} <code>sr_live_key_9981x40a9bc</code></span>
             </div>
 
             <div className="input-group">
-              <label className="input-label">Query Room Parameter (?location=) *</label>
+              <label className="input-label">{t('Query Room Parameter (?location=) *')}</label>
               <input 
                 type="text"
                 className="input-field"
                 value={incomingLocationQuery}
                 onChange={(e) => setIncomingLocationQuery(e.target.value)}
-                placeholder="e.g. Room 402 or Central Library"
+                placeholder={t('e.g. Room 402 or Central Library')}
               />
             </div>
 
@@ -283,7 +285,7 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
               disabled={incomingLoading}
             >
               <Send size={16} />
-              <span>{incomingLoading ? 'Processing Request...' : 'Simulate SpaceReserve Request'}</span>
+              <span>{incomingLoading ? t('Processing Request...') : t('Simulate SpaceReserve Request')}</span>
             </button>
           </div>
 
@@ -292,7 +294,7 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
             <div className="panel-header">
               <div className="panel-title">
                 <Code2 size={18} className="text-purple" />
-                <span>Finder Portal JSON Output</span>
+                <span>{t('Finder Portal JSON Output')}</span>
               </div>
               {incomingResponse && (
                 <span className={`badge ${incomingResponse.statusCode === 200 ? 'badge-claimed' : 'badge-lost'}`}>
@@ -310,8 +312,8 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
             ) : (
               <div className="empty-response-state">
                 <Layers size={36} className="text-muted" />
-                <div className="empty-title">Awaiting Incoming Request</div>
-                <p className="empty-desc">Click "Simulate SpaceReserve Request" on the left to test the exposed API endpoint.</p>
+                <div className="empty-title">{t('Awaiting Incoming Request')}</div>
+                <p className="empty-desc">{t('Click "Simulate SpaceReserve Request" on the left to test the exposed API endpoint.')}</p>
               </div>
             )}
           </div>

@@ -13,14 +13,16 @@ import {
   Layers
 } from './Icons';
 import { findAiPotentialMatches } from '../services/store';
+import { useT } from '../language';
 
 export default function AiMatcher({ items, onConfirmMatch, onViewItem }) {
+  const t = useT();
   const matches = findAiPotentialMatches(items);
   const [successMsg, setSuccessMsg] = useState('');
 
   const handleConfirm = (lostId, foundId) => {
     onConfirmMatch(lostId, foundId);
-    setSuccessMsg('✓ Match confirmed! Status of both items updated to MATCHED and notification sent.');
+    setSuccessMsg(t('✓ Match confirmed! Status of both items updated to MATCHED and notification sent.'));
     setTimeout(() => setSuccessMsg(''), 4000);
   };
 
@@ -30,13 +32,13 @@ export default function AiMatcher({ items, onConfirmMatch, onViewItem }) {
       <div className="ai-matcher-header glass-card">
         <div className="ai-matcher-badge">
           <Sparkles size={16} className="text-purple" />
-          <span>Google Gemini Semantic & Visual Matchmaker</span>
+          <span>{t('Google Gemini Semantic & Visual Matchmaker')}</span>
         </div>
         <h1 className="ai-matcher-title">
-          AI Lost ⇄ Found <span className="gradient-text">Automated Match Engine</span>
+          {t('AI Lost ⇄ Found')} <span className="gradient-text">{t('Automated Match Engine')}</span>
         </h1>
         <p className="ai-matcher-sub">
-          The system continuously compares embeddings, keywords, visual descriptions, and campus location timestamps to discover lost & found pairings automatically.
+          {t('The system continuously compares embeddings, keywords, visual descriptions, and campus location timestamps to discover lost & found pairings automatically.')}
         </p>
       </div>
 
@@ -51,9 +53,9 @@ export default function AiMatcher({ items, onConfirmMatch, onViewItem }) {
       {matches.length === 0 ? (
         <div className="glass-card empty-state-box">
           <Sparkles size={40} className="text-purple mb-2" />
-          <div className="empty-title">No Pending Pairings Discovered</div>
+          <div className="empty-title">{t('No Pending Pairings Discovered')}</div>
           <p className="empty-desc">
-            All current lost reports and found items have been cross-checked. As new reports are submitted, Gemini AI will automatically scan for matching pairs.
+            {t('All current lost reports and found items have been cross-checked. As new reports are submitted, Gemini AI will automatically scan for matching pairs.')}
           </p>
         </div>
       ) : (
@@ -64,11 +66,11 @@ export default function AiMatcher({ items, onConfirmMatch, onViewItem }) {
               <div className="match-card-top">
                 <div className="match-score-badge">
                   <Sparkles size={15} className="text-purple" />
-                  <span>{match.similarityPercentage}% Match Probability</span>
+                  <span>{match.similarityPercentage}% {t('Match Probability')}</span>
                 </div>
-                
+
                 <span className={`badge ${match.status === 'CONFIRMED' ? 'badge-claimed' : 'badge-matched'}`}>
-                  {match.status === 'CONFIRMED' ? '✓ Match Confirmed' : 'Needs Staff Verification'}
+                  {match.status === 'CONFIRMED' ? t('✓ Match Confirmed') : t('Needs Staff Verification')}
                 </span>
               </div>
 
@@ -77,8 +79,8 @@ export default function AiMatcher({ items, onConfirmMatch, onViewItem }) {
                 {/* Left: Lost Item */}
                 <div className="match-side-box lost-side">
                   <div className="match-side-header">
-                    <span className="badge badge-lost">Lost Report</span>
-                    <span className="text-xs text-muted">By {match.lostItem.reportedBy?.name?.split(' ')[0]}</span>
+                    <span className="badge badge-lost">{t('Lost Report')}</span>
+                    <span className="text-xs text-muted">{t('By')} {match.lostItem.reportedBy?.name?.split(' ')[0]}</span>
                   </div>
                   <div className="match-item-preview" onClick={() => onViewItem(match.lostItem)}>
                     <img src={match.lostItem.photoUrl} alt="" className="match-thumb" />
@@ -100,8 +102,8 @@ export default function AiMatcher({ items, onConfirmMatch, onViewItem }) {
                 {/* Right: Found Item */}
                 <div className="match-side-box found-side">
                   <div className="match-side-header">
-                    <span className="badge badge-found">Found Item</span>
-                    <span className="text-xs text-muted">By {match.foundItem.reportedBy?.name?.split(' ')[0]}</span>
+                    <span className="badge badge-found">{t('Found Item')}</span>
+                    <span className="text-xs text-muted">{t('By')} {match.foundItem.reportedBy?.name?.split(' ')[0]}</span>
                   </div>
                   <div className="match-item-preview" onClick={() => onViewItem(match.foundItem)}>
                     <img src={match.foundItem.photoUrl} alt="" className="match-thumb" />
@@ -119,10 +121,10 @@ export default function AiMatcher({ items, onConfirmMatch, onViewItem }) {
               {/* Shared Attributes */}
               {match.commonAttributes && match.commonAttributes.length > 0 && (
                 <div className="common-attributes-box">
-                  <span className="text-xs font-semibold text-muted">Matching Tokens:</span>
+                  <span className="text-xs font-semibold text-muted">{t('Matching Tokens:')}</span>
                   <div className="tokens-list">
-                    {match.commonAttributes.map((t, idx) => (
-                      <span key={idx} className="match-token-pill">{t}</span>
+                    {match.commonAttributes.map((token, idx) => (
+                      <span key={idx} className="match-token-pill">{token}</span>
                     ))}
                   </div>
                 </div>
@@ -134,7 +136,7 @@ export default function AiMatcher({ items, onConfirmMatch, onViewItem }) {
                   className="btn btn-glass btn-sm"
                   onClick={() => onViewItem(match.foundItem)}
                 >
-                  Inspect Found Item
+                  {t('Inspect Found Item')}
                 </button>
 
                 {match.status !== 'CONFIRMED' ? (
@@ -143,12 +145,12 @@ export default function AiMatcher({ items, onConfirmMatch, onViewItem }) {
                     onClick={() => handleConfirm(match.lostItem.id, match.foundItem.id)}
                   >
                     <CheckCircle2 size={16} />
-                    <span>Confirm Match & Notify Owner</span>
+                    <span>{t('Confirm Match & Notify Owner')}</span>
                   </button>
                 ) : (
                   <div className="confirmed-indicator">
                     <CheckCircle2 size={16} className="text-emerald" />
-                    <span className="text-sm font-semibold text-emerald">Matched Pair Linked</span>
+                    <span className="text-sm font-semibold text-emerald">{t('Matched Pair Linked')}</span>
                   </div>
                 )}
               </div>

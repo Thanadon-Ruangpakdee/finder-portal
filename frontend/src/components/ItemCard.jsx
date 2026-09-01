@@ -6,8 +6,11 @@ import {
   ArrowRight,
   ShieldAlert
 } from './Icons';
+import { useT, useLang, localeFor } from '../language';
 
 export default function ItemCard({ item, onClick }) {
+  const t = useT();
+  const { lang } = useLang();
   const isFound = item.type === 'FOUND';
   const hasPendingClaim = item.claims && item.claims.some(c => c.status === 'PENDING');
 
@@ -15,9 +18,9 @@ export default function ItemCard({ item, onClick }) {
   const formatDate = (isoString) => {
     try {
       const d = new Date(isoString);
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      return d.toLocaleDateString(localeFor(lang), { month: 'short', day: 'numeric', year: 'numeric' });
     } catch {
-      return 'Recently';
+      return t('Recently');
     }
   };
 
@@ -35,25 +38,25 @@ export default function ItemCard({ item, onClick }) {
         {/* Type Badge (Found / Lost) */}
         <div className="card-top-badges">
           <span className={`badge ${isFound ? 'badge-found' : 'badge-lost'}`}>
-            {isFound ? 'Found Item' : 'Lost Report'}
+            {isFound ? t('Found Item') : t('Lost Report')}
           </span>
 
           <span className={`badge badge-${item.status.toLowerCase()}`}>
-            {item.status === 'CLAIMED' ? '✓ Reunited' : item.status}
+            {item.status === 'CLAIMED' ? t('✓ Reunited') : t(item.status)}
           </span>
         </div>
 
         {hasPendingClaim && (
           <div className="pending-claim-chip">
             <ShieldAlert size={13} />
-            <span>Claim Under Review</span>
+            <span>{t('Claim Under Review')}</span>
           </div>
         )}
       </div>
 
       {/* Card Content Body */}
       <div className="item-card-body">
-        <div className="item-category-pill">{item.category}</div>
+        <div className="item-category-pill">{t(item.category)}</div>
         
         <h3 className="item-card-title">{item.title}</h3>
         
@@ -72,9 +75,9 @@ export default function ItemCard({ item, onClick }) {
 
         {/* Card Action */}
         <div className="item-card-footer">
-          <span className="card-reported-by">By: {item.reporter?.name?.split(' ')[0] || item.reportedBy?.name?.split(' ')[0] || 'User'}</span>
+          <span className="card-reported-by">{t('By:')} {item.reporter?.name?.split(' ')[0] || item.reportedBy?.name?.split(' ')[0] || t('User')}</span>
           <button className="view-details-btn">
-            <span>View Details</span>
+            <span>{t('View Details')}</span>
             <ArrowRight size={13} />
           </button>
         </div>

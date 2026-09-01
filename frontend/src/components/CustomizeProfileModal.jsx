@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { api } from '../services/api';
 import { X, Sparkles } from './Icons';
+import { useT } from '../language';
 
 export default function CustomizeProfileModal({ currentUser, onClose, onProfileUpdated }) {
+  const t = useT();
   const [name, setName] = useState(currentUser.name);
   const [avatarMode, setAvatarMode] = useState(
     currentUser.avatar && currentUser.avatar.startsWith('https://api.dicebear.com') ? 'avatar' : 'custom'
@@ -26,7 +28,7 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
   const handleSave = (e) => {
     e.preventDefault();
     if (!name.trim()) {
-      setError('Name field cannot be blank.');
+      setError(t('Name field cannot be blank.'));
       return;
     }
 
@@ -41,7 +43,7 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
       })
       .catch(err => {
         setLoading(false);
-        setError(err.message || 'Failed to update profile.');
+        setError(err.message || t('Failed to update profile.'));
       });
   };
 
@@ -68,9 +70,9 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
         <div className="modal-header">
           <div className="modal-header-title">
             <Sparkles size={18} className="text-rose" />
-            <h3>Customize Profile Settings</h3>
+            <h3>{t('Customize Profile Settings')}</h3>
           </div>
-          <button className="icon-btn close-modal-btn" onClick={onClose} aria-label="Close modal">
+          <button className="icon-btn close-modal-btn" onClick={onClose} aria-label={t('Close modal')}>
             <X size={18} />
           </button>
         </div>
@@ -82,7 +84,7 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
           {/* Avatar Preview Box */}
           <div className="avatar-customizer-preview-box">
             <div className="avatar-preview-wrapper">
-              <img src={finalAvatarUrl} alt="Avatar Preview" className="avatar-large-preview" />
+              <img src={finalAvatarUrl} alt={t('Avatar Preview')} className="avatar-large-preview" />
             </div>
             
             {/* Mode Toggle Selection */}
@@ -92,27 +94,27 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
                 className={`segment-btn ${avatarMode === 'avatar' ? 'active' : ''}`}
                 onClick={() => setAvatarMode('avatar')}
               >
-                Generated Avatar
+                {t('Generated Avatar')}
               </button>
               <button 
                 type="button"
                 className={`segment-btn ${avatarMode === 'custom' ? 'active' : ''}`}
                 onClick={() => setAvatarMode('custom')}
               >
-                Custom Photo
+                {t('Custom Photo')}
               </button>
             </div>
           </div>
 
           {/* Form Fields */}
           <div className="form-group-stacked">
-            <label className="form-label-stacked">Display Name</label>
-            <input 
+            <label className="form-label-stacked">{t('Display Name')}</label>
+            <input
               type="text"
               className="login-form-input"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Your full name"
+              placeholder={t('Your full name')}
               disabled={loading}
             />
           </div>
@@ -126,18 +128,18 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
                 disabled={loading}
                 style={{ width: '100%', gap: '8px', justifyContent: 'center' }}
               >
-                🎲 Randomize Generated Character
+                {t('🎲 Randomize Generated Character')}
               </button>
             </div>
           ) : (
             <div className="form-group-stacked animate-fadeIn">
-              <label className="form-label-stacked">Upload Custom Profile Photo</label>
+              <label className="form-label-stacked">{t('Upload Custom Profile Photo')}</label>
               
               {/* File upload selector labeled exactly "Choose Image" */}
               <div style={{ display: 'flex', gap: '10px', alignItems: 'center', margin: '4px 0 8px' }}>
                 <label className="btn btn-glass btn-sm" style={{ cursor: 'pointer', margin: 0 }}>
-                  Choose Image
-                  <input 
+                  {t('Choose Image')}
+                  <input
                     type="file" 
                     accept="image/*" 
                     onChange={handleFileChange} 
@@ -145,7 +147,7 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
                   />
                 </label>
                 <span className="text-xs text-muted">
-                  {customAvatarUrl.startsWith('data:') ? '✓ Photo selected successfully' : 'Select a photo from your local files'}
+                  {customAvatarUrl.startsWith('data:') ? t('✓ Photo selected successfully') : t('Select a photo from your local files')}
                 </span>
               </div>
               
@@ -156,7 +158,7 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
                   style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', marginTop: '2px', padding: 0 }}
                   onClick={() => setCustomAvatarUrl('')}
                 >
-                  ✕ Clear selected photo
+                  {t('✕ Clear selected photo')}
                 </button>
               )}
             </div>
@@ -170,14 +172,14 @@ export default function CustomizeProfileModal({ currentUser, onClose, onProfileU
               onClick={onClose}
               disabled={loading}
             >
-              Cancel
+              {t('Cancel')}
             </button>
             <button 
               type="submit" 
               className="btn btn-primary"
               disabled={loading}
             >
-              {loading ? 'Saving Profile Updates...' : '✓ Save Changes'}
+              {loading ? t('Saving Profile Updates...') : t('✓ Save Changes')}
             </button>
           </div>
         </form>

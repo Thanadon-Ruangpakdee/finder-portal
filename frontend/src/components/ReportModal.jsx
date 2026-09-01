@@ -10,6 +10,7 @@ import {
   Image as ImageIcon
 } from './Icons';
 import { ITEM_CATEGORIES, simulateGeminiAiAnalysis } from '../services/store';
+import { useT } from '../language';
 
 export default function ReportModal({
   isOpen,
@@ -18,6 +19,8 @@ export default function ReportModal({
   currentUser,
   onSubmitItem
 }) {
+  const t = useT();
+
   if (!isOpen) return null;
 
   const [type, setType] = useState(initialType);
@@ -55,7 +58,7 @@ export default function ReportModal({
 
   const handleRunAiAnalysis = async () => {
     if (!title && !description) {
-      alert('Please enter a brief item name or description for Gemini AI to analyze.');
+      alert(t('Please enter a brief item name or description for Gemini AI to analyze.'));
       return;
     }
 
@@ -67,7 +70,7 @@ export default function ReportModal({
       setCategory(result.category);
       if (!title) setTitle(result.suggestedTitle);
       setAiTags(result.tags);
-      setAiSuccessMessage(`Gemini AI classified this as "${result.category}" (${Math.round(result.confidence * 100)}% confidence)`);
+      setAiSuccessMessage(`${t('Gemini AI classified this as')} "${t(result.category)}" (${Math.round(result.confidence * 100)}% ${t('confidence')})`);
     } catch (err) {
       console.error(err);
     } finally {
@@ -109,12 +112,12 @@ export default function ReportModal({
         <div className="modal-header">
           <div className="modal-title-group">
             <h2 className="modal-title">
-              {type === 'FOUND' ? 'Report a Found Item' : 'Report a Lost Item'}
+              {type === 'FOUND' ? t('Report a Found Item') : t('Report a Lost Item')}
             </h2>
             <p className="modal-sub">
-              {type === 'FOUND' 
-                ? 'Log an item you picked up on campus so the owner can claim it.' 
-                : 'Broadcast details about something you lost on campus.'}
+              {type === 'FOUND'
+                ? t('Log an item you picked up on campus so the owner can claim it.')
+                : t('Broadcast details about something you lost on campus.')}
             </p>
           </div>
           <button className="icon-btn close-modal-btn" onClick={onClose}>
@@ -133,7 +136,7 @@ export default function ReportModal({
                 onClick={() => setType('FOUND')}
               >
                 <PlusCircle size={18} />
-                <span>I Found Something</span>
+                <span>{t('I Found Something')}</span>
               </button>
               <button
                 type="button"
@@ -141,7 +144,7 @@ export default function ReportModal({
                 onClick={() => setType('LOST')}
               >
                 <AlertCircle size={18} />
-                <span>I Lost Something</span>
+                <span>{t('I Lost Something')}</span>
               </button>
             </div>
 
@@ -152,8 +155,8 @@ export default function ReportModal({
                   <Sparkles size={20} className="text-purple" />
                 </div>
                 <div>
-                  <div className="ai-card-title">Google Gemini Auto-Categorization</div>
-                  <div className="ai-card-desc">Type your description, then click analyze to suggest categories and tags automatically.</div>
+                  <div className="ai-card-title">{t('Google Gemini Auto-Categorization')}</div>
+                  <div className="ai-card-desc">{t('Type your description, then click analyze to suggest categories and tags automatically.')}</div>
                 </div>
               </div>
               <button 
@@ -165,12 +168,12 @@ export default function ReportModal({
                 {isAiAnalyzing ? (
                   <>
                     <Loader2 size={16} className="animate-spin" />
-                    <span>Analyzing...</span>
+                    <span>{t('Analyzing...')}</span>
                   </>
                 ) : (
                   <>
                     <Sparkles size={16} />
-                    <span>Analyze with AI</span>
+                    <span>{t('Analyze with AI')}</span>
                   </>
                 )}
               </button>
@@ -185,11 +188,11 @@ export default function ReportModal({
 
             {/* Item Title Input */}
             <div className="input-group">
-              <label className="input-label">Item Name / Headline *</label>
-              <input 
+              <label className="input-label">{t('Item Name / Headline *')}</label>
+              <input
                 type="text"
                 className="input-field"
-                placeholder="e.g. Apple MacBook Pro 14 inch or Leather Wallet"
+                placeholder={t('e.g. Apple MacBook Pro 14 inch or Leather Wallet')}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
@@ -199,44 +202,44 @@ export default function ReportModal({
             {/* Category & Location Grid */}
             <div className="form-two-col">
               <div className="input-group">
-                <label className="input-label">Category *</label>
+                <label className="input-label">{t('Category *')}</label>
                 <select 
                   className="select-field"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                 >
                   {ITEM_CATEGORIES.filter(c => c !== 'All').map(c => (
-                    <option key={c} value={c}>{c}</option>
+                    <option key={c} value={c}>{t(c)}</option>
                   ))}
                 </select>
               </div>
 
               <div className="input-group">
-                <label className="input-label">Location on Campus *</label>
+                <label className="input-label">{t('Location on Campus *')}</label>
                 <select 
                   className="select-field"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                 >
-                  <option value="Cathedral of Learning (CL Building)">Cathedral of Learning (CL Building)</option>
-                  <option value="Room 402 (Engineering Building)">Room 402 (Engineering Building)</option>
-                  <option value="John Paul II Sports Center">John Paul II Sports Center</option>
-                  <option value="Central Library (3rd Floor)">Central Library (3rd Floor)</option>
-                  <option value="Library Room 4B / Study Pod">Library Room 4B / Study Pod</option>
-                  <option value="Campus Cafeteria (AU Mall)">Campus Cafeteria (AU Mall)</option>
-                  <option value="Martin de Tours Hall (MSME)">Martin de Tours Hall (MSME)</option>
-                  <option value="Other Custom Location">Other Custom Location</option>
+                  <option value="Cathedral of Learning (CL Building)">{t('Cathedral of Learning (CL Building)')}</option>
+                  <option value="Room 402 (Engineering Building)">{t('Room 402 (Engineering Building)')}</option>
+                  <option value="John Paul II Sports Center">{t('John Paul II Sports Center')}</option>
+                  <option value="Central Library (3rd Floor)">{t('Central Library (3rd Floor)')}</option>
+                  <option value="Library Room 4B / Study Pod">{t('Library Room 4B / Study Pod')}</option>
+                  <option value="Campus Cafeteria (AU Mall)">{t('Campus Cafeteria (AU Mall)')}</option>
+                  <option value="Martin de Tours Hall (MSME)">{t('Martin de Tours Hall (MSME)')}</option>
+                  <option value="Other Custom Location">{t('Other Custom Location')}</option>
                 </select>
               </div>
             </div>
 
             {location === 'Other Custom Location' && (
               <div className="input-group">
-                <label className="input-label">Specify Custom Location</label>
-                <input 
+                <label className="input-label">{t('Specify Custom Location')}</label>
+                <input
                   type="text"
                   className="input-field"
-                  placeholder="e.g. Student Union Hallway, 2nd floor"
+                  placeholder={t('e.g. Student Union Hallway, 2nd floor')}
                   value={customLocation}
                   onChange={(e) => setCustomLocation(e.target.value)}
                 />
@@ -245,10 +248,10 @@ export default function ReportModal({
 
             {/* Detailed Description */}
             <div className="input-group">
-              <label className="input-label">Description & Identifying Characteristics *</label>
-              <textarea 
+              <label className="input-label">{t('Description & Identifying Characteristics *')}</label>
+              <textarea
                 className="textarea-field"
-                placeholder="Provide accurate visual details: color, model, stickers, or condition..."
+                placeholder={t('Provide accurate visual details: color, model, stickers, or condition...')}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
@@ -257,7 +260,7 @@ export default function ReportModal({
 
             {/* Photo Input (File Upload or Presets) */}
             <div className="input-group">
-              <label className="input-label">Photo Upload or Presets</label>
+              <label className="input-label">{t('Photo Upload or Presets')}</label>
               
               <div className="file-upload-wrapper">
                 <input 
@@ -269,25 +272,25 @@ export default function ReportModal({
                 />
                 <label htmlFor="photo-upload-input" className="file-upload-btn btn btn-glass btn-sm">
                   <ImageIcon size={16} />
-                  <span>Choose Image</span>
+                  <span>{t('Choose Image')}</span>
                 </label>
               </div>
 
               {photoUrl && (
                 <div className="upload-preview-box">
-                  <img src={photoUrl} alt="Preview" className="upload-preview-img" />
+                  <img src={photoUrl} alt={t('Preview')} className="upload-preview-img" />
                   <button 
                     type="button" 
                     className="clear-photo-btn"
                     onClick={() => setPhotoUrl('')}
                   >
-                    Remove Photo
+                    {t('Remove Photo')}
                   </button>
                 </div>
               )}
               
               <div className="photo-presets-row">
-                <span className="preset-label">Or Pick Preset:</span>
+                <span className="preset-label">{t('Or Pick Preset:')}</span>
                 {samplePhotoPresets.map((preset, idx) => (
                   <button
                     key={idx}
@@ -295,7 +298,7 @@ export default function ReportModal({
                     className="preset-btn"
                     onClick={() => setPhotoUrl(preset.url)}
                   >
-                    {preset.label}
+                    {t(preset.label)}
                   </button>
                 ))}
               </div>
@@ -305,11 +308,11 @@ export default function ReportModal({
           {/* Footer */}
           <div className="modal-footer">
             <button type="button" className="btn btn-glass" onClick={onClose}>
-              Cancel
+              {t('Cancel')}
             </button>
             <button type="submit" className="btn btn-primary">
               <Send size={16} />
-              <span>Publish {type === 'FOUND' ? 'Found Item' : 'Lost Report'}</span>
+              <span>{t('Publish')} {type === 'FOUND' ? t('Found Item') : t('Lost Report')}</span>
             </button>
           </div>
         </form>

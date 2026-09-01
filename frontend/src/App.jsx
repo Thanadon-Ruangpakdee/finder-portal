@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
 import HeroBanner from './components/HeroBanner';
 import ItemCard from './components/ItemCard';
 import ItemDetailModal from './components/ItemDetailModal';
@@ -12,6 +13,7 @@ import {
   MOCK_USERS 
 } from './services/store';
 import { api } from './services/api';
+import { useT } from './language';
 import LoginPortal from './components/LoginPortal';
 import CustomizeProfileModal from './components/CustomizeProfileModal';
 import SettingsView from './components/SettingsView';
@@ -26,6 +28,8 @@ import {
 } from './components/Icons';
 
 export default function App() {
+  const t = useT();
+
   // Theme state
   const [theme, setTheme] = useState('light');
 
@@ -57,6 +61,9 @@ export default function App() {
   // Toast notifications
   const [toastMessage, setToastMessage] = useState('');
 
+  // แถบเมนูซ้าย (ใช้ตอนจอเล็กเท่านั้น จอใหญ่จะกางค้างไว้เสมอ)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   // Load items when search or filter values change
   const fetchItems = () => {
     if (!currentUser) return;
@@ -70,7 +77,7 @@ export default function App() {
       .then(setItems)
       .catch(err => {
         console.error('Failed to fetch items:', err);
-        showToast('❌ Failed to sync items from server');
+        showToast(`❌ ${t('Failed to sync items from server')}`);
       });
   };
 
@@ -123,14 +130,14 @@ export default function App() {
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
     setCurrentRole(user.role);
-    showToast(`✓ Welcome to Finder Portal, ${user.name}!`);
+    showToast(`✓ ${t('Welcome to Finder Portal,')} ${user.name}!`);
   };
 
   const handleSignOut = () => {
     sessionStorage.removeItem('finder_jwt_token');
     setCurrentUser(null);
     setCurrentRole(null);
-    showToast('Signed out of Active Directory session.');
+    showToast(t('Signed out of Active Directory session.'));
   };
 
   const showToast = (msg) => {
@@ -145,9 +152,9 @@ export default function App() {
         fetchItems();
         fetchStatsItems();
         setIsReportModalOpen(false);
-        showToast(`✓ New ${newItemData.type === 'FOUND' ? 'found item' : 'lost report'} published!`);
+        showToast(`✓ ${newItemData.type === 'FOUND' ? t('New found item published!') : t('New lost report published!')}`);
       })
-      .catch(err => showToast(`❌ Error: ${err.message}`));
+      .catch(err => showToast(`❌ ${t('Error:')} ${err.message}`));
   };
 
   // Handler: Submit claim
@@ -157,9 +164,9 @@ export default function App() {
         fetchItems();
         fetchStatsItems();
         api.getItemById(itemId).then(setSelectedItem);
-        showToast('✓ Claim request submitted for teacher verification.');
+        showToast(`✓ ${t('Claim request submitted for teacher verification.')}`);
       })
-      .catch(err => showToast(`❌ Error: ${err.message}`));
+      .catch(err => showToast(`❌ ${t('Error:')} ${err.message}`));
   };
 
   // Handler: Approve claim
@@ -169,9 +176,9 @@ export default function App() {
         fetchItems();
         fetchStatsItems();
         api.getItemById(itemId).then(setSelectedItem);
-        showToast('✓ Claim approved! Item status set to CLAIMED.');
+        showToast(`✓ ${t('Claim approved! Item status set to CLAIMED.')}`);
       })
-      .catch(err => showToast(`❌ Error: ${err.message}`));
+      .catch(err => showToast(`❌ ${t('Error:')} ${err.message}`));
   };
 
   // Handler: Reject claim
@@ -181,9 +188,9 @@ export default function App() {
         fetchItems();
         fetchStatsItems();
         api.getItemById(itemId).then(setSelectedItem);
-        showToast('Claim rejected.');
+        showToast(t('Claim rejected.'));
       })
-      .catch(err => showToast(`❌ Error: ${err.message}`));
+      .catch(err => showToast(`❌ ${t('Error:')} ${err.message}`));
   };
 
   // Handler: Update status
@@ -193,22 +200,22 @@ export default function App() {
         fetchItems();
         fetchStatsItems();
         api.getItemById(itemId).then(setSelectedItem);
-        showToast(`✓ Item status updated to ${newStatus}`);
+        showToast(`✓ ${t('Item status updated to')} ${t(newStatus)}`);
       })
-      .catch(err => showToast(`❌ Error: ${err.message}`));
+      .catch(err => showToast(`❌ ${t('Error:')} ${err.message}`));
   };
 
   // Handler: Delete item
   const handleDeleteItem = (itemId) => {
-    if (window.confirm('Are you sure you want to delete this listing? (Admin action)')) {
+    if (window.confirm(t('Are you sure you want to delete this listing? (Admin action)'))) {
       api.deleteItem(itemId)
         .then(() => {
           fetchItems();
           fetchStatsItems();
           setSelectedItem(null);
-          showToast('Listing removed successfully.');
+          showToast(t('Listing removed successfully.'));
         })
-        .catch(err => showToast(`❌ Error: ${err.message}`));
+        .catch(err => showToast(`❌ ${t('Error:')} ${err.message}`));
     }
   };
 
@@ -231,9 +238,9 @@ export default function App() {
       .then(() => {
         fetchItems();
         fetchStatsItems();
-        showToast('✓ AI Match confirmed! Both item statuses updated to MATCHED.');
+        showToast(`✓ ${t('AI Match confirmed! Both item statuses updated to MATCHED.')}`);
       })
-      .catch(err => showToast(`❌ Match confirmation failed: ${err.message}`));
+      .catch(err => showToast(`❌ ${t('Match confirmation failed:')} ${err.message}`));
   };
 
   // Open Report Modal
@@ -311,24 +318,43 @@ export default function App() {
         <div className="ambient-blob-3"></div>
       </div>
 
-      {/* Main Navigation Bar */}
-      <Navbar 
-        currentRole={currentRole}
-        setCurrentRole={setCurrentRole}
-        currentUser={currentUser}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        onOpenReportModal={handleOpenReportModal}
-        theme={theme}
-        setTheme={setTheme}
-        onSignOut={handleSignOut}
-        onOpenProfileModal={() => setIsProfileModalOpen(true)}
-      />
+      <div className="app-layout">
+        {/* แถบเมนูด้านซ้าย: เมนูหลัก + หมวดหมู่ + ตัวกรอง */}
+        <Sidebar
+          currentRole={currentRole}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          allItems={statsItems}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          typeFilter={typeFilter}
+          setTypeFilter={setTypeFilter}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        />
 
-      {/* Main Container */}
-      <main className="app-container">
+        <div className="app-main-column">
+          {/* แถบบน: ค้นหา + ปุ่มแจ้งของ + ธีม + บัญชีผู้ใช้ */}
+          <Navbar
+            currentRole={currentRole}
+            currentUser={currentUser}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onOpenReportModal={handleOpenReportModal}
+            theme={theme}
+            setTheme={setTheme}
+            onSignOut={handleSignOut}
+            onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+          />
+
+          {/* Main Container */}
+          <main className="app-container">
         {/* Toast Alert */}
         {toastMessage && (
           <div className="toast-notification glass-card">
@@ -340,39 +366,25 @@ export default function App() {
         {/* View 1: Main Items Feed & Discovery Hub */}
         {activeTab === 'feed' && (
           <div className="feed-view-layout">
-            <HeroBanner 
+            <HeroBanner
               items={statsItems}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
               typeFilter={typeFilter}
               setTypeFilter={setTypeFilter}
               statusFilter={statusFilter}
               setStatusFilter={setStatusFilter}
-              selectedLocation={selectedLocation}
-              setSelectedLocation={setSelectedLocation}
             />
 
             {/* Results Header */}
             <div className="feed-results-header">
-              <div className="results-count">
-                Showing <strong>{filteredItems.length}</strong> items across campus
+              <div className="section-title-row">
+                <span className="section-accent-bar"></span>
+                <span className="section-title-text">
+                  {selectedCategory === 'All' ? t('All items') : t(selectedCategory)}
+                </span>
               </div>
-              
-              <div className="quick-actions-bar">
-                <button 
-                  className="btn btn-glass btn-sm"
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedCategory('All');
-                    setTypeFilter('ALL');
-                    setStatusFilter('ALL');
-                    setSelectedLocation('All Locations');
-                  }}
-                >
-                  Reset Filters
-                </button>
+
+              <div className="results-count">
+                {t('Showing')} <strong>{filteredItems.length}</strong> {t('items across campus')}
               </div>
             </div>
 
@@ -380,22 +392,22 @@ export default function App() {
             {filteredItems.length === 0 ? (
               <div className="empty-results-box glass-card">
                 <Inbox size={48} className="text-muted mb-3" />
-                <h3 className="empty-title">No matching items found</h3>
+                <h3 className="empty-title">{t('No matching items found')}</h3>
                 <p className="empty-desc">
-                  Try adjusting your search keywords, clear category filters, or be the first to report this item!
+                  {t('Try adjusting your search keywords, clear category filters, or be the first to report this item!')}
                 </p>
                 <div className="empty-action-buttons">
                   <button 
                     className="btn btn-cyan btn-sm"
                     onClick={() => handleOpenReportModal('FOUND')}
                   >
-                    Report Found Item
+                    {t('Report Found Item')}
                   </button>
                   <button 
                     className="btn btn-danger btn-sm"
                     onClick={() => handleOpenReportModal('LOST')}
                   >
-                    Report Lost Item
+                    {t('Report Lost Item')}
                   </button>
                 </div>
               </div>
@@ -448,14 +460,16 @@ export default function App() {
             currentUser={currentUser}
             onProfileUpdated={(updatedUser) => {
               setCurrentUser(updatedUser);
-              showToast('✓ Profile settings updated!');
+              showToast(`✓ ${t('Profile settings updated!')}`);
             }}
             theme={theme}
             setTheme={setTheme}
             onSignOut={handleSignOut}
           />
         )}
-      </main>
+          </main>
+        </div>
+      </div>
 
       {/* Modals */}
       {selectedItem && (
