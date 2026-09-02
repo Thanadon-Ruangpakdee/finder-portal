@@ -26,8 +26,9 @@ export default function ReportModal({
   const [type, setType] = useState(initialType);
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('Electronics');
-  const [location, setLocation] = useState('Room 402 (Engineering Building)');
-  const [customLocation, setCustomLocation] = useState('');
+  const [building, setBuilding] = useState('Engineering Building (VME Building)');
+  const [roomNumber, setRoomNumber] = useState('');
+  const [customBuilding, setCustomBuilding] = useState('');
   const [description, setDescription] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
   const [aiTags, setAiTags] = useState([]);
@@ -80,7 +81,13 @@ export default function ReportModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const finalLocation = location === 'Other Custom Location' ? customLocation : location;
+    const finalBuilding = building === 'Other / Custom Building' ? (customBuilding.trim() || 'Campus Common Area') : building;
+    const roomStr = roomNumber.trim();
+    let finalLocation = finalBuilding;
+    if (roomStr) {
+      const formattedRoom = roomStr.toLowerCase().startsWith('room') ? roomStr : `Room ${roomStr}`;
+      finalLocation = `${formattedRoom} (${finalBuilding})`;
+    }
 
     const newItem = {
       id: `item-${Date.now()}`,
@@ -199,7 +206,7 @@ export default function ReportModal({
               />
             </div>
 
-            {/* Category & Location Grid */}
+            {/* Category & Building Selector Grid */}
             <div className="form-two-col">
               <div className="input-group">
                 <label className="input-label">{t('Category *')}</label>
@@ -215,36 +222,50 @@ export default function ReportModal({
               </div>
 
               <div className="input-group">
-                <label className="input-label">{t('Location on Campus *')}</label>
+                <label className="input-label">{t('Building / Campus Facility *')}</label>
                 <select 
                   className="select-field"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  value={building}
+                  onChange={(e) => setBuilding(e.target.value)}
                 >
                   <option value="Cathedral of Learning (CL Building)">{t('Cathedral of Learning (CL Building)')}</option>
-                  <option value="Room 402 (Engineering Building)">{t('Room 402 (Engineering Building)')}</option>
+                  <option value="Engineering Building (VME Building)">{t('Engineering Building (VME Building)')}</option>
+                  <option value="Martin de Tours Hall (MSME Building)">{t('Martin de Tours Hall (MSME Building)')}</option>
+                  <option value="Saint Gabriel's Hall">{t("Saint Gabriel's Hall")}</option>
+                  <option value="Central Library Building">{t('Central Library Building')}</option>
                   <option value="John Paul II Sports Center">{t('John Paul II Sports Center')}</option>
-                  <option value="Central Library (3rd Floor)">{t('Central Library (3rd Floor)')}</option>
-                  <option value="Library Room 4B / Study Pod">{t('Library Room 4B / Study Pod')}</option>
-                  <option value="Campus Cafeteria (AU Mall)">{t('Campus Cafeteria (AU Mall)')}</option>
-                  <option value="Martin de Tours Hall (MSME)">{t('Martin de Tours Hall (MSME)')}</option>
-                  <option value="Other Custom Location">{t('Other Custom Location')}</option>
+                  <option value="AU Mall & Cafeteria">{t('AU Mall & Cafeteria')}</option>
+                  <option value="Other / Custom Building">{t('Other / Custom Building')}</option>
                 </select>
               </div>
             </div>
 
-            {location === 'Other Custom Location' && (
+            {/* Custom Building Input (If Other selected) */}
+            {building === 'Other / Custom Building' && (
               <div className="input-group">
-                <label className="input-label">{t('Specify Custom Location')}</label>
+                <label className="input-label">{t('Specify Custom Building')}</label>
                 <input
                   type="text"
                   className="input-field"
-                  placeholder={t('e.g. Student Union Hallway, 2nd floor')}
-                  value={customLocation}
-                  onChange={(e) => setCustomLocation(e.target.value)}
+                  placeholder={t('e.g. Student Union Hallway, Pavilion')}
+                  value={customBuilding}
+                  onChange={(e) => setCustomBuilding(e.target.value)}
+                  required
                 />
               </div>
             )}
+
+            {/* Room Number / Specific Area Input Box */}
+            <div className="input-group">
+              <label className="input-label">{t('Room Number / Specific Area')}</label>
+              <input
+                type="text"
+                className="input-field"
+                placeholder={t('e.g. Room 402, Room 4B, 3rd Floor Pod')}
+                value={roomNumber}
+                onChange={(e) => setRoomNumber(e.target.value)}
+              />
+            </div>
 
             {/* Detailed Description */}
             <div className="input-group">

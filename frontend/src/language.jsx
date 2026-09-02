@@ -72,14 +72,18 @@ const TH = {
 
   // ---------- สถานที่ ----------
   'All Locations': 'ทุกสถานที่',
+  'Building / Campus Facility *': 'อาคาร / ตึกมหาวิทยาลัย *',
+  'Room Number / Specific Area': 'เลขห้อง / บริเวณที่พบ (ระบุได้)',
+  'e.g. Room 402, Room 4B, 3rd Floor Pod': 'เช่น Room 402, ห้อง 4B, โต๊ะอ่านหนังสือชั้น 3',
   'Cathedral of Learning (CL Building)': 'อาคาร Cathedral of Learning (CL)',
+  'Engineering Building (VME Building)': 'อาคารวิศวกรรมศาสตร์ (VME Building)',
+  'Martin de Tours Hall (MSME Building)': 'อาคาร Martin de Tours (MSME Building)',
+  'Saint Gabriel\'s Hall': 'อาคาร Saint Gabriel',
+  'Central Library Building': 'อาคารหอสมุดกลาง',
   'John Paul II Sports Center': 'ศูนย์กีฬา John Paul II',
-  'Room 402 (Engineering Building)': 'ห้อง 402 (อาคารวิศวกรรมศาสตร์)',
-  'Central Library (3rd Floor)': 'หอสมุดกลาง (ชั้น 3)',
-  'Library Room 4B / Study Pod': 'ห้องสมุด 4B / ห้องอ่านหนังสือ',
-  'Campus Cafeteria (AU Mall)': 'โรงอาหาร (AU Mall)',
-  'Martin de Tours Hall (MSME)': 'อาคาร Martin de Tours (MSME)',
-  'Other Custom Location': 'สถานที่อื่นๆ (ระบุเอง)',
+  'AU Mall & Cafeteria': 'ศูนย์อาหาร AU Mall',
+  'Other / Custom Building': 'ตึกอื่นๆ (ระบุเอง)',
+  'Specify Custom Building': 'ระบุชื่อตึก/อาคาร',
 
   // ---------- แถบบน ----------
   'Search by keywords (e.g. MacBook, Wallet, Keys, Phone)...':
