@@ -279,8 +279,13 @@ export default function App() {
     }
 
     // Status
-    if (statusFilter !== 'ALL' && item.status !== statusFilter) {
-      return false;
+    if (statusFilter !== 'ALL') {
+      if (item.status !== statusFilter) return false;
+    } else {
+      // Exclude reunited/claimed items from specific FOUND or LOST feeds so returned items don't mix in
+      if (typeFilter !== 'ALL' && item.status === 'CLAIMED') {
+        return false;
+      }
     }
 
     // Location

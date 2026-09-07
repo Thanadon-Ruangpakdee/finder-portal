@@ -22,8 +22,8 @@ export default function HeroBanner({
   const t = useT();
 
   const totalItems = items.length;
-  const foundCount = items.filter((i) => i.type === 'FOUND').length;
-  const lostCount = items.filter((i) => i.type === 'LOST').length;
+  const foundCount = items.filter((i) => i.type === 'FOUND' && i.status !== 'CLAIMED').length;
+  const lostCount = items.filter((i) => i.type === 'LOST' && i.status !== 'CLAIMED').length;
   const claimedCount = items.filter((i) => i.status === 'CLAIMED').length;
   const successRate = totalItems > 0 ? Math.round((claimedCount / totalItems) * 100) : 0;
 

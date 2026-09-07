@@ -318,6 +318,80 @@ export default function ItemDetailModal({
               )}
             </div>
           )}
+
+          {/* Action Section for LOST REPORT items (when someone found this item) */}
+          {!isFound && item.status !== 'CLAIMED' && (
+            <div className="claim-action-section glass-card" style={{ borderLeft: '4px solid var(--primary)' }}>
+              <h3 className="claim-section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary-light)' }}>
+                <CheckCircle size={18} className="text-blue" />
+                <span>{t('Did you find this lost item?')}</span>
+              </h3>
+              <p className="claim-section-subtitle">
+                {t('If you found this item or turned it in to the Security Desk / owner, submit details below to notify the owner and campus staff.')}
+              </p>
+
+              {userClaim ? (
+                <div>
+                  <div className="claim-status-banner success-banner" style={{ marginBottom: '14px' }}>
+                    <CheckCircle size={20} className="text-emerald" />
+                    <div>
+                      <div className="font-semibold">{t('You reported finding this item')}</div>
+                      <div className="text-muted text-sm">
+                        {t('Status:')} <strong>{t(userClaim.status || 'PENDING')}</strong> — {t('Campus staff and owner have been notified.')}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="input-group">
+                    <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+                      <CheckCircle size={15} className="text-emerald" />
+                      <span>{t('Submitted Found Details & Location')}</span>
+                    </label>
+                    <textarea
+                      className="textarea-field"
+                      value={userClaim.proofText || userClaim.proofDescription || ''}
+                      readOnly
+                      disabled
+                      style={{ opacity: 0.95, background: 'var(--bg-input)', cursor: 'not-allowed', color: 'var(--text-primary)', fontWeight: 500 }}
+                    />
+                  </div>
+                </div>
+              ) : claimSubmitted ? (
+                <div>
+                  <div className="claim-status-banner success-banner" style={{ marginBottom: '14px' }}>
+                    <CheckCircle size={20} className="text-emerald" />
+                    <div>
+                      <div className="font-semibold">{t('Found Notification Submitted Successfully!')}</div>
+                      <div className="text-muted text-sm">
+                        {t('Item owner and campus security desk have been notified to verify and retrieve the item.')}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleClaimSubmit} className="claim-form">
+                  <div className="input-group">
+                    <label className="input-label">{t('Found Details & Current Location')}</label>
+                    <textarea
+                      className="textarea-field"
+                      placeholder={t("e.g. 'Found this Macbook in Room 402 and turned it in to the Security Desk at CL 1st Floor', or 'Stored at MSME Dean office'...")}
+                      value={claimProof}
+                      onChange={(e) => setClaimProof(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary w-full"
+                    disabled={isSubmitting || !claimProof.trim()}
+                  >
+                    <Send size={16} />
+                    <span>{isSubmitting ? t('Sending Notification...') : t('Report I Found This Item')}</span>
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
