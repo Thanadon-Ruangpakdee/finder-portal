@@ -59,6 +59,11 @@ export const INITIAL_ITEMS = [
     location: 'Room 402 (Engineering Building)',
     date: '2026-08-11T14:30:00Z',
     photoUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
+    photoUrls: [
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&auto=format&fit=crop&q=80'
+    ],
     status: 'OPEN',
     reportedBy: {
       id: 'u-102',
@@ -87,6 +92,10 @@ export const INITIAL_ITEMS = [
     location: 'Central Library (3rd Floor)',
     date: '2026-08-12T09:15:00Z',
     photoUrl: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800&auto=format&fit=crop&q=80',
+    photoUrls: [
+      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80'
+    ],
     status: 'OPEN',
     reportedBy: {
       id: 'u-101',

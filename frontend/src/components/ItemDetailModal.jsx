@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   MapPin, 
@@ -10,7 +10,10 @@ import {
   Send,
   Building2,
   ChevronRight,
-  FileText
+  ChevronLeft,
+  FileText,
+  Maximize2,
+  ZoomIn
 } from './Icons';
 import { USER_ROLES } from '../services/store';
 import { useT, useLang, localeFor } from '../language';
@@ -27,10 +30,39 @@ export default function ItemDetailModal({
   const [claimProof, setClaimProof] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [claimSubmitted, setClaimSubmitted] = useState(false);
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
   const t = useT();
   const lang = useLang();
 
   if (!item) return null;
+
+  const rawImages = item.photoUrls || item.photos || (item.photoUrl ? [item.photoUrl] : []);
+  const images = Array.isArray(rawImages) && rawImages.length > 0
+    ? rawImages
+    : ['https://images.unsplash.com/photo-1586769852044-692d6e3703f0?w=800&auto=format&fit=crop&q=80'];
+
+  const nextImg = (e) => {
+    if (e) e.stopPropagation();
+    setCurrentImgIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImg = (e) => {
+    if (e) e.stopPropagation();
+    setCurrentImgIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsLightboxOpen(false);
+      if (e.key === 'ArrowRight') nextImg();
+      if (e.key === 'ArrowLeft') prevImg();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isLightboxOpen, images.length]);
 
   const isFound = item.type === 'FOUND';
   const isTeacherOrAdmin = currentRole === USER_ROLES.TEACHER || currentRole === USER_ROLES.ADMIN;
@@ -86,14 +118,60 @@ export default function ItemDetailModal({
 
         {/* Modal Body */}
         <div className="modal-body modal-scrollable">
-          {/* Main Photo Banner */}
-          <div className="detail-photo-container">
+          {/* Main Photo Banner & Interactive Carousel */}
+          <div className="detail-photo-container" onClick={() => setIsLightboxOpen(true)} style={{ cursor: 'pointer' }}>
             <img 
-              src={item.photoUrl || 'https://images.unsplash.com/photo-1586769852044-692d6e3703f0?w=800&auto=format&fit=crop&q=80'} 
+              src={images[currentImgIndex]} 
               alt={item.title} 
               className="detail-main-img"
             />
+            
             <div className="detail-category-badge">{t(item.category)}</div>
+
+            {/* Expand Fullscreen Badge */}
+            <div className="photo-expand-badge">
+              <ZoomIn size={14} />
+              <span>{t('View Full Screen')}</span>
+            </div>
+
+            {/* Carousel Navigation Arrows if multiple photos */}
+            {images.length > 1 && (
+              <>
+                <button 
+                  type="button"
+                  className="photo-carousel-btn carousel-btn-left" 
+                  onClick={prevImg}
+                  aria-label={t('Previous Photo')}
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <button 
+                  type="button"
+                  className="photo-carousel-btn carousel-btn-right" 
+                  onClick={nextImg}
+                  aria-label={t('Next Photo')}
+                >
+                  <ChevronRight size={20} />
+                </button>
+
+                {/* Carousel Counter & Dots */}
+                <div className="photo-carousel-dots">
+                  {images.map((_, idx) => (
+                    <span 
+                      key={idx} 
+                      className={`carousel-dot ${idx === currentImgIndex ? 'active' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentImgIndex(idx);
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="photo-carousel-counter">
+                  {currentImgIndex + 1} / {images.length}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Title & Description Block (Outer Card matching Image 2) */}
@@ -394,6 +472,79 @@ export default function ItemDetailModal({
           )}
         </div>
       </div>
+
+      {/* Fullscreen Image Lightbox Overlay */}
+      {isLightboxOpen && (
+        <div className="lightbox-overlay" onClick={() => setIsLightboxOpen(false)}>
+          <div className="lightbox-container" onClick={(e) => e.stopPropagation()}>
+            {/* Header controls */}
+            <div className="lightbox-top-bar">
+              <div className="lightbox-title-info">
+                <span className="lightbox-item-title">{item.title}</span>
+                {images.length > 1 && (
+                  <span className="lightbox-counter-badge">
+                    {currentImgIndex + 1} / {images.length}
+                  </span>
+                )}
+              </div>
+              <button 
+                type="button" 
+                className="icon-btn lightbox-close-btn" 
+                onClick={() => setIsLightboxOpen(false)}
+                aria-label={t('Close')}
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Main Image Stage */}
+            <div className="lightbox-stage">
+              <img 
+                src={images[currentImgIndex]} 
+                alt={item.title} 
+                className="lightbox-image" 
+              />
+
+              {images.length > 1 && (
+                <>
+                  <button 
+                    type="button"
+                    className="lightbox-arrow-btn arrow-left"
+                    onClick={prevImg}
+                    aria-label={t('Previous Photo')}
+                  >
+                    <ChevronLeft size={28} />
+                  </button>
+                  <button 
+                    type="button"
+                    className="lightbox-arrow-btn arrow-right"
+                    onClick={nextImg}
+                    aria-label={t('Next Photo')}
+                  >
+                    <ChevronRight size={28} />
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Thumbnail Strip */}
+            {images.length > 1 && (
+              <div className="lightbox-thumbs-bar">
+                {images.map((imgUrl, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className={`lightbox-thumb-item ${idx === currentImgIndex ? 'active' : ''}`}
+                    onClick={() => setCurrentImgIndex(idx)}
+                  >
+                    <img src={imgUrl} alt={`Thumb ${idx + 1}`} />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
