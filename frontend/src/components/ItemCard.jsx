@@ -16,12 +16,10 @@ export default function ItemCard({ item, onClick }) {
 
   // Format date helper
   const formatDate = (isoString) => {
-    try {
-      const d = new Date(isoString);
-      return d.toLocaleDateString(localeFor(lang), { month: 'short', day: 'numeric', year: 'numeric' });
-    } catch {
-      return t('Recently');
-    }
+    if (!isoString) return t('Recently');
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return t('Recently');
+    return d.toLocaleDateString(localeFor(lang), { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   return (

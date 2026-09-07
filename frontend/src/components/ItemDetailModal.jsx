@@ -53,18 +53,16 @@ export default function ItemDetailModal({
   };
 
   const formatDate = (isoString) => {
-    try {
-      const d = new Date(isoString);
-      return d.toLocaleString(localeFor(lang), {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch {
-      return t('Recently');
-    }
+    if (!isoString) return t('Recently');
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return t('Recently');
+    return d.toLocaleString(localeFor(lang), {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   return (
@@ -80,7 +78,7 @@ export default function ItemDetailModal({
               {item.status === 'CLAIMED' ? t('✓ Reunited with Owner') : t(item.status)}
             </span>
           </div>
-          <button className="icon-btn close-modal-btn" onClick={onClose}>
+          <button className="icon-btn close-modal-btn" onClick={onClose} aria-label={t('Close')}>
             <X size={20} />
           </button>
         </div>
@@ -103,22 +101,7 @@ export default function ItemDetailModal({
             <p className="detail-description">{item.description}</p>
           </div>
 
-          {/* AI Extracted Tags */}
-          {Array.isArray(item.aiTags) && item.aiTags.length > 0 && (
-            <div className="detail-section ai-tags-section">
-              <div className="section-label">
-                <Sparkles size={16} className="text-purple" />
-                <span>{t('AI Automated Visual Tags (Gemini)')}</span>
-              </div>
-              <div className="detail-ai-tag-pills">
-                {item.aiTags.map((tag, i) => (
-                  <span key={i} className="ai-tag-pill">{tag}</span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Metadata Grid */}
+          {/* Key Item Details Grid */}
           <div className="detail-meta-grid">
             <div className="detail-meta-card">
               <MapPin size={18} className="meta-card-icon text-cyan" />
@@ -132,7 +115,7 @@ export default function ItemDetailModal({
               <Calendar size={18} className="meta-card-icon text-blue" />
               <div>
                 <div className="meta-card-label">{t('Date & Time')}</div>
-                <div className="meta-card-val">{formatDate(item.date)}</div>
+                <div className="meta-card-val">{formatDate(item.createdAt || item.date)}</div>
               </div>
             </div>
 
@@ -140,29 +123,35 @@ export default function ItemDetailModal({
               <User size={18} className="meta-card-icon text-emerald" />
               <div>
                 <div className="meta-card-label">{t('Reported By')}</div>
-                <div className="meta-card-val">{item.reportedBy?.name || t('Campus Student')}</div>
-                <div className="meta-card-sub">{item.reportedBy?.email}</div>
-              </div>
-            </div>
-
-            <div className="detail-meta-card">
-              <ShieldCheck size={18} className="meta-card-icon text-purple" />
-              <div>
-                <div className="meta-card-label">{t('Active Directory Auth')}</div>
-                <div className="meta-card-val">{t('Verified AD Token')}</div>
-                <div className="meta-card-sub">{t('OIDC Claims Verified')}</div>
+                <div className="meta-card-val">{item.reporter?.name || item.reportedBy?.name || t('Campus Student')}</div>
+                <div className="meta-card-sub">{item.reporter?.email || item.reportedBy?.email}</div>
               </div>
             </div>
           </div>
 
-          {/* SpaceReserve Peer API Discovery CTA */}
+          {/* AI Extracted Tags */}
+          {Array.isArray(item.aiTags) && item.aiTags.length > 0 && (
+            <div className="detail-section ai-tags-section">
+              <div className="section-label">
+                <Sparkles size={15} className="text-purple" />
+                <span>{t('AI Visual Tags (Gemini)')}</span>
+              </div>
+              <div className="detail-ai-tag-pills">
+                {item.aiTags.map((tag, i) => (
+                  <span key={i} className="ai-tag-pill">{tag}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* SpaceReserve Peer API Quick Lookup */}
           <div className="spacereserve-discovery-box glass-card">
             <div className="spacereserve-box-left">
-              <Building2 size={24} className="text-cyan" />
+              <Building2 size={20} className="text-cyan" />
               <div>
                 <div className="box-title">{t('SpaceReserve Room Intelligence')}</div>
                 <div className="box-desc">
-                  {t('Query the room booking database to check who scheduled')} <strong>{item.location}</strong> {t('at this time.')}
+                  {t('Check who scheduled')} <strong>{item.location}</strong> {t('at this time.')}
                 </div>
               </div>
             </div>
