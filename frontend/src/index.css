@@ -20,6 +20,7 @@
   --bg-modal: #ffffff;
 
   /* Glassmorphism & Borders */
+  --border-color: #cbd5e1;
   --border-subtle: #e2e8f0;
   --border-hover: rgba(15, 98, 254, 0.35);
   --border-active: #0f62fe;
@@ -69,6 +70,7 @@
   --bg-input: #0f172a;
   --bg-modal: #1e293b;
 
+  --border-color: rgba(255, 255, 255, 0.14);
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(59, 130, 246, 0.45);
   --border-active: #3b82f6;
@@ -1358,6 +1360,7 @@ h1, h2, h3, h4 {
   overflow: hidden;
   margin-bottom: 18px;
   background: #000000;
+  border: 1px solid var(--border-color);
 }
 
 .detail-main-img {
@@ -1431,6 +1434,14 @@ h1, h2, h3, h4 {
 
 .detail-section {
   margin-bottom: 18px;
+}
+
+.ai-tags-section {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
 .section-label {
@@ -1607,7 +1618,9 @@ h1, h2, h3, h4 {
 .claim-action-section {
   padding: 18px;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .claim-section-title {
