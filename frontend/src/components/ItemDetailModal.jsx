@@ -126,12 +126,14 @@ export default function ItemDetailModal({
               </div>
             </div>
 
-            <div className="detail-meta-card">
+            <div className="detail-meta-card detail-meta-card-full">
               <User size={18} className="meta-card-icon text-emerald" />
               <div className="meta-card-content">
                 <div className="meta-card-label">{t('Reported By')}</div>
-                <div className="meta-card-val meta-text-wrap">{item.reporter?.name || item.reportedBy?.name || t('Campus Student')}</div>
-                <div className="meta-card-sub meta-text-wrap">{item.reporter?.email || item.reportedBy?.email}</div>
+                <div className="meta-card-reporter-row">
+                  <div className="meta-card-val meta-reporter-name">{item.reporter?.name || item.reportedBy?.name || t('Campus Student')}</div>
+                  <div className="meta-card-sub meta-reporter-email">{item.reporter?.email || item.reportedBy?.email}</div>
+                </div>
               </div>
             </div>
           </div>
