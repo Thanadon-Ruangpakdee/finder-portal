@@ -1,6 +1,8 @@
 # Stage 1: Build the application
 FROM node:20-alpine AS builder
 
+RUN apk add --no-cache openssl libc6-compat
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
@@ -16,6 +18,8 @@ RUN npm run build
 
 # Stage 2: Run the compiled code
 FROM node:20-alpine AS runner
+
+RUN apk add --no-cache openssl libc6-compat
 
 WORKDIR /usr/src/app
 
