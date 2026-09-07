@@ -9,7 +9,8 @@ import {
   CheckCircle, 
   Send,
   Building2,
-  ChevronRight
+  ChevronRight,
+  FileText
 } from './Icons';
 import { USER_ROLES } from '../services/store';
 import { useT, useLang, localeFor } from '../language';
@@ -95,17 +96,23 @@ export default function ItemDetailModal({
             <div className="detail-category-badge">{t(item.category)}</div>
           </div>
 
-          {/* Title & Description */}
-          <div className="detail-info-block">
+          {/* Title & Dedicated Description Block */}
+          <div className="detail-info-block glass-card">
             <h2 className="detail-title">{item.title}</h2>
-            <p className="detail-description">{item.description}</p>
+            <div className="detail-desc-card">
+              <div className="desc-card-header">
+                <FileText size={15} className="text-cyan" />
+                <span>{t('Description & Details')}</span>
+              </div>
+              <p className="detail-description">{item.description}</p>
+            </div>
           </div>
 
           {/* Key Item Details Grid */}
           <div className="detail-meta-grid">
             <div className="detail-meta-card">
               <MapPin size={18} className="meta-card-icon text-cyan" />
-              <div>
+              <div className="meta-card-content">
                 <div className="meta-card-label">{t('Location Recorded')}</div>
                 <div className="meta-card-val">{item.location}</div>
               </div>
@@ -113,7 +120,7 @@ export default function ItemDetailModal({
 
             <div className="detail-meta-card">
               <Calendar size={18} className="meta-card-icon text-blue" />
-              <div>
+              <div className="meta-card-content">
                 <div className="meta-card-label">{t('Date & Time')}</div>
                 <div className="meta-card-val">{formatDate(item.createdAt || item.date)}</div>
               </div>
@@ -121,10 +128,10 @@ export default function ItemDetailModal({
 
             <div className="detail-meta-card">
               <User size={18} className="meta-card-icon text-emerald" />
-              <div>
+              <div className="meta-card-content">
                 <div className="meta-card-label">{t('Reported By')}</div>
-                <div className="meta-card-val">{item.reporter?.name || item.reportedBy?.name || t('Campus Student')}</div>
-                <div className="meta-card-sub">{item.reporter?.email || item.reportedBy?.email}</div>
+                <div className="meta-card-val meta-text-wrap">{item.reporter?.name || item.reportedBy?.name || t('Campus Student')}</div>
+                <div className="meta-card-sub meta-text-wrap">{item.reporter?.email || item.reportedBy?.email}</div>
               </div>
             </div>
           </div>
