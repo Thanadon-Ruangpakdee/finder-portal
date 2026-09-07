@@ -96,17 +96,8 @@ export default function ItemDetailModal({
             <div className="detail-category-badge">{t(item.category)}</div>
           </div>
 
-          {/* Title & Dedicated Description Block */}
-          <div className="detail-info-block glass-card">
-            <h2 className="detail-title">{item.title}</h2>
-            <div className="detail-desc-card">
-              <div className="desc-card-header">
-                <FileText size={15} className="text-cyan" />
-                <span>{t('Description & Details')}</span>
-              </div>
-              <p className="detail-description">{item.description}</p>
-            </div>
-          </div>
+          {/* Title Header */}
+          <h2 className="detail-title">{item.title}</h2>
 
           {/* Key Item Details Grid */}
           <div className="detail-meta-grid">
@@ -134,6 +125,14 @@ export default function ItemDetailModal({
                   <div className="meta-card-val meta-reporter-name">{item.reporter?.name || item.reportedBy?.name || t('Campus Student')}</div>
                   <div className="meta-card-sub meta-reporter-email">{item.reporter?.email || item.reportedBy?.email}</div>
                 </div>
+              </div>
+            </div>
+
+            <div className="detail-meta-card detail-meta-card-full">
+              <FileText size={18} className="meta-card-icon text-purple" />
+              <div className="meta-card-content">
+                <div className="meta-card-label">{t('Description & Details')}</div>
+                <p className="detail-description">{item.description || t('No description provided.')}</p>
               </div>
             </div>
           </div>
