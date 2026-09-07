@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:5001/api/v1';
+const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_BASE_URL = isLocalhost ? 'http://localhost:5001/api/v1' : '/project/api/v1';
 
 // Helper to attach authorization header
 function getAuthHeaders() {
