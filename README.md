@@ -62,6 +62,22 @@
 
 ---
 
+## 🌐 Peer API Documentation
+
+### 1. Consuming Classmate's Peer API
+- **Partner System**: **SpaceReserve** (Campus Room & Facility Reservation System)
+- **Endpoint Consumed**: `GET /external/bookings/active-at?room={roomLocation}&at={timestamp}`
+- **Authentication Header**: `x-api-key: {SPACE_RESERVE_PEER_KEY}`
+- **Data Fetched**: Active room reservation logs, booker name, student email, and reservation time frame.
+- **Application Purpose**: Correlates lost item report locations with room reservation logs to identify occupants who scheduled the room at the exact time an item went missing.
+
+### 2. Exposed Endpoint for Classmates
+- **Endpoint Exposed**: `GET /api/v1/peer/found-items`
+- **Query Parameters**: `location` (string, required), `since` (ISO Date string, optional)
+- **Authentication Header**: `x-api-key: {FINDER_PORTAL_PEER_KEY}`
+- **Data Provided**: List of active unclaimed found items recorded at that location (`id`, `title`, `description`, `category`, `location`, `createdAt`).
+- **Application Purpose**: Allows partner campus applications (e.g. SpaceReserve) to query whether items were found inside a room before a student checks into their reserved study pod/lab.
+
 ## 🚀 How to Run Locally
 
 ### Prerequisites
