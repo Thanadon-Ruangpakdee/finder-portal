@@ -187,14 +187,32 @@ export const INITIAL_ITEMS = [
     },
     aiTags: ['Wallet', 'Brown', 'Leather', 'Cafeteria'],
     claims: []
+  },
+  {
+    id: 'item-07',
+    type: 'LOST',
+    title: 'Apple MacBook Pro 14" (Space Gray)',
+    description: 'Lost my MacBook Pro 14 inch Space Gray in Room 402 after afternoon CS lecture. Has GitHub sticker.',
+    category: 'Electronics',
+    location: 'Room 402 (Engineering Building)',
+    date: '2026-08-11T14:00:00Z',
+    photoUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
+    status: 'OPEN',
+    reportedBy: {
+      id: 'u-101',
+      name: 'Thanadon Ruangpakdee',
+      email: 'thanadon.r@student.uni.edu'
+    },
+    aiTags: ['Apple', 'Laptop', 'Space Gray', 'MacBook'],
+    claims: []
   }
 ];
 
 // Helper to get stored items
 export const getStoredItems = () => {
-  const data = localStorage.getItem('finder_portal_items');
+  const data = localStorage.getItem('finder_portal_items_v2');
   if (!data) {
-    localStorage.setItem('finder_portal_items', JSON.stringify(INITIAL_ITEMS));
+    localStorage.setItem('finder_portal_items_v2', JSON.stringify(INITIAL_ITEMS));
     return INITIAL_ITEMS;
   }
   try {
