@@ -120,7 +120,35 @@ async function main() {
     }
   });
 
-  console.log(`[Seed] Seeded 5 items.`);
+  const item6 = await prisma.item.create({
+    data: {
+      title: 'Apple MacBook Pro 16" (Space Gray)',
+      description: 'Lost my MacBook Pro 16 inch Space Gray in Room 402 after CS lecture. It has a white cat sticker on the back.',
+      category: 'Electronics',
+      type: 'LOST',
+      status: 'OPEN',
+      location: 'Room 402 (Engineering Building)',
+      imagePreset: 'MacBook',
+      aiTags: 'laptop,macbook,apple,computer,cat',
+      reporterId: student.id
+    }
+  });
+
+  const item7 = await prisma.item.create({
+    data: {
+      title: 'Brown Leather Bifold Wallet',
+      description: 'Found a brown leather bifold wallet with AU student ID inside near MSME hall stairs.',
+      category: 'Wallets & Bags',
+      type: 'FOUND',
+      status: 'OPEN',
+      location: 'Martin de Tours Hall (MSME)',
+      imagePreset: 'Leather Wallet',
+      aiTags: 'wallet,leather,brown,id,card',
+      reporterId: staff.id
+    }
+  });
+
+  console.log(`[Seed] Seeded 7 items.`);
 
   // 4. Seed Claims
   await prisma.claim.create({
