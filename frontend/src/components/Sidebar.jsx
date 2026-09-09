@@ -120,39 +120,37 @@ export default function Sidebar({
                 </button>
               )}
 
+              <button
+                className={`side-nav-btn ${activeTab === 'matcher' ? 'active' : ''}`}
+                onClick={() => goTo('matcher')}
+              >
+                <Sparkles size={17} />
+                <span className="side-nav-grow">{t('AI Matcher')}</span>
+                <span className="side-nav-pill pill-ai">{t('Auto')}</span>
+              </button>
+
+              <button
+                className={`side-nav-btn ${activeTab === 'peer' ? 'active' : ''}`}
+                onClick={() => goTo('peer')}
+              >
+                <Globe2 size={17} />
+                <span className="side-nav-grow">SpaceReserve</span>
+                <span className="side-nav-pill pill-peer">{t('Peer')}</span>
+              </button>
+
               {isStaffOrAdmin && (
-                <>
-                  <button
-                    className={`side-nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
-                    onClick={() => goTo('dashboard')}
-                  >
-                    <ShieldCheck size={17} />
-                    <span className="side-nav-grow">
-                      {isAdmin ? t('Admin Dash') : t('Staff Dash')}
-                    </span>
-                    <span className="side-nav-pill pill-staff">
-                      {isAdmin ? t('Admin') : t('Staff')}
-                    </span>
-                  </button>
-
-                  <button
-                    className={`side-nav-btn ${activeTab === 'matcher' ? 'active' : ''}`}
-                    onClick={() => goTo('matcher')}
-                  >
-                    <Sparkles size={17} />
-                    <span className="side-nav-grow">{t('AI Matcher')}</span>
-                    <span className="side-nav-pill pill-ai">{t('Auto')}</span>
-                  </button>
-
-                  <button
-                    className={`side-nav-btn ${activeTab === 'peer' ? 'active' : ''}`}
-                    onClick={() => goTo('peer')}
-                  >
-                    <Globe2 size={17} />
-                    <span className="side-nav-grow">SpaceReserve</span>
-                    <span className="side-nav-pill pill-peer">{t('Peer')}</span>
-                  </button>
-                </>
+                <button
+                  className={`side-nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
+                  onClick={() => goTo('dashboard')}
+                >
+                  <ShieldCheck size={17} />
+                  <span className="side-nav-grow">
+                    {isAdmin ? t('Admin Dash') : t('Staff Dash')}
+                  </span>
+                  <span className="side-nav-pill pill-staff">
+                    {isAdmin ? t('Admin') : t('Staff')}
+                  </span>
+                </button>
               )}
 
               <button
