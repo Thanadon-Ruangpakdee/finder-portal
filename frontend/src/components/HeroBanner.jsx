@@ -28,18 +28,21 @@ export default function HeroBanner({
   const successRate = totalItems > 0 ? Math.round((claimedCount / totalItems) * 100) : 0;
 
   return (
-    <div className="hero-compact-card glass-card">
-      {/* ป้าย + หัวข้อ */}
+    <div className="hero-compact-card hero-crimson-banner">
+      {/* Folded Ribbon Accent (Matching Login Hero) */}
+      <div className="hero-crimson-ribbon"></div>
+
+      {/* Header Content */}
       <div className="hero-compact-head">
-        <div className="hero-badge">
+        <div className="hero-badge hero-badge-crimson">
           <Sparkles size={14} className="hero-sparkle" />
           <span>{t('Assumption University (ABAC) • AI Lost & Found')}</span>
         </div>
-        <h1 className="hero-main-title">
+        <h1 className="hero-main-title hero-title-white">
           {t('Reuniting AU Students with their')}{' '}
-          <span className="gradient-text">{t('Lost Belongings')}</span>
+          <span className="hero-title-highlight">{t('Lost Belongings')}</span>
         </h1>
-        <p className="hero-subtitle">
+        <p className="hero-subtitle hero-sub-white">
           {t(
             'Search Assumption University records, report found items with instant Gemini AI category tagging, or verify claims securely via Microsoft Active Directory.'
           )}
@@ -49,7 +52,7 @@ export default function HeroBanner({
       {/* การ์ดสถิติ — กดเพื่อกรองได้เหมือนเดิม */}
       <div className="hero-stats-grid">
         <div
-          className={`stat-card clickable-stat-card ${
+          className={`stat-card stat-card-crimson ${
             typeFilter === 'FOUND' && statusFilter !== 'CLAIMED' ? 'active' : ''
           }`}
           onClick={() => {
@@ -67,7 +70,7 @@ export default function HeroBanner({
         </div>
 
         <div
-          className={`stat-card clickable-stat-card ${
+          className={`stat-card stat-card-crimson ${
             typeFilter === 'LOST' && statusFilter !== 'CLAIMED' ? 'active' : ''
           }`}
           onClick={() => {
@@ -85,7 +88,7 @@ export default function HeroBanner({
         </div>
 
         <div
-          className={`stat-card clickable-stat-card ${
+          className={`stat-card stat-card-crimson ${
             statusFilter === 'CLAIMED' ? 'active' : ''
           }`}
           onClick={() => {
@@ -103,7 +106,7 @@ export default function HeroBanner({
         </div>
 
         <div
-          className={`stat-card clickable-stat-card ${
+          className={`stat-card stat-card-crimson ${
             typeFilter === 'ALL' && statusFilter === 'ALL' ? 'active' : ''
           }`}
           onClick={() => {

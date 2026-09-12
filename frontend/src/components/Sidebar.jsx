@@ -6,14 +6,15 @@ import {
   Globe2,
   Layers,
   Settings,
-  FileText
+  FileText,
+  FinderPortalLogo
 } from './Icons';
 import { USER_ROLES, ITEM_CATEGORIES } from '../services/store';
 import { useT } from '../language';
 
 // สีจุดนำหน้าแต่ละหมวดหมู่
 const CATEGORY_DOT_COLORS = {
-  'All': 'linear-gradient(135deg, var(--primary), var(--accent-gold))',
+  'All': 'linear-gradient(135deg, #E11D48, #BE123C)',
   'Electronics': '#2563eb',
   'Wallets & Bags': '#d97706',
   'IDs & Cards': '#dc2626',
@@ -82,10 +83,11 @@ export default function Sidebar({
       {isOpen && <div className="sidebar-backdrop" onClick={onClose}></div>}
 
       <aside className={`app-sidebar ${isOpen ? 'open' : ''}`}>
-        {/* โลโก้ */}
-        <div className="sidebar-brand" onClick={() => goTo('feed')}>
-          <div className="sidebar-brand-icon">
-            <Search size={19} />
+        {/* โลโก้แบรนด์สไตล์ Crimson Hero */}
+        <div className="sidebar-brand brand-crimson-banner" onClick={() => goTo('feed')}>
+          <div className="sidebar-brand-ribbon"></div>
+          <div className="sidebar-brand-logo-circle">
+            <FinderPortalLogo size={24} color="#E11D48" />
           </div>
           <div>
             <div className="sidebar-brand-title">

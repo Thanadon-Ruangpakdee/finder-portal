@@ -34,29 +34,29 @@
   --text-secondary: #475569;
   --text-muted: #94a3b8;
 
-  /* Corporate Blue & Emerald Palette */
-  --primary: #0f62fe;            /* Royal Blue */
-  --primary-light: #3b82f6;
-  --primary-dark: #1d4ed8;
-  --accent-gold: #10b981;        /* Emerald Green Accent */
-  --accent-gold-light: #34d399;
-  --accent-cyan: #2563eb;
+  /* Crimson Red & Emerald Gold Palette (Matching Login Portal) */
+  --primary: #E11D48;            /* Crimson Red */
+  --primary-light: #F43F5E;
+  --primary-dark: #BE123C;
+  --accent-gold: #E11D48;        /* Crimson Red Accent */
+  --accent-gold-light: #F43F5E;
+  --accent-cyan: #E11D48;
   --accent-emerald: #10b981;
   --accent-amber: #f59e0b;
-  --accent-rose: #ef4444;
+  --accent-rose: #E11D48;
 
   /* Status Colors */
-  --status-open: #3b82f6;
+  --status-open: #E11D48;
   --status-matched: #f59e0b;
   --status-claimed: #10b981;
   --status-closed: #64748b;
 
   /* Radius & Transitions */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
   --radius-full: 9999px;
-  --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* =========================================================
@@ -4051,3 +4051,182 @@ h1, h2, h3, h4 {
   border-color: var(--primary);
   transform: scale(1.08);
 }
+
+/* =========================================================
+   Crimson Redesign System (Matching Login Portal Aesthetics)
+   ========================================================= */
+
+/* Sidebar Crimson Brand Banner */
+.brand-crimson-banner {
+  background: linear-gradient(145deg, #E11D48 0%, #BE123C 55%, #991B1B 100%) !important;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+.sidebar-brand-ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: #991B1B;
+  border-bottom-left-radius: 18px;
+  opacity: 0.7;
+}
+
+.sidebar-brand-logo-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.brand-crimson-banner .sidebar-brand-title {
+  color: #ffffff !important;
+  font-weight: 800;
+}
+
+.brand-crimson-banner .sidebar-brand-accent {
+  color: #ffe4e6 !important;
+}
+
+.brand-crimson-banner .sidebar-brand-sub {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+/* Hero Crimson Banner */
+.hero-crimson-banner {
+  background: linear-gradient(145deg, #E11D48 0%, #BE123C 55%, #991B1B 100%) !important;
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px !important;
+  box-shadow: 0 20px 50px rgba(190, 18, 60, 0.22) !important;
+  padding: 36px 36px 28px !important;
+  margin-bottom: 26px !important;
+}
+
+.hero-crimson-ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 75px;
+  height: 75px;
+  background: #991B1B;
+  border-bottom-left-radius: 32px;
+  opacity: 0.75;
+}
+
+.hero-badge-crimson {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(10px);
+}
+
+.hero-title-white {
+  color: #ffffff !important;
+  font-size: 2.1rem !important;
+  font-weight: 800 !important;
+}
+
+.hero-title-highlight {
+  color: #ffffff !important;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+  text-underline-offset: 6px;
+}
+
+.hero-sub-white {
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-size: 0.95rem !important;
+}
+
+.stat-card-crimson {
+  background: rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  cursor: pointer;
+  border-radius: 16px !important;
+  transition: transform 0.25s ease, background 0.25s ease !important;
+}
+
+.stat-card-crimson:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-3px) scale(1.02);
+  border-color: #ffffff !important;
+}
+
+.stat-card-crimson.active {
+  background: #ffffff !important;
+  color: #BE123C !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25) !important;
+}
+
+.stat-card-crimson.active .stat-number,
+.stat-card-crimson.active .stat-label {
+  color: #BE123C !important;
+}
+
+.stat-card-crimson .stat-number {
+  color: #ffffff !important;
+  font-size: 1.6rem !important;
+  font-weight: 800 !important;
+}
+
+.stat-card-crimson .stat-label {
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+}
+
+/* Item Card Crimson Styling */
+.item-card {
+  border-radius: 20px !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease !important;
+}
+
+.item-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 20px 40px rgba(225, 29, 72, 0.15) !important;
+  border-color: rgba(225, 29, 72, 0.4) !important;
+}
+
+.view-details-btn {
+  background: rgba(225, 29, 72, 0.1) !important;
+  color: #E11D48 !important;
+  border: 1px solid rgba(225, 29, 72, 0.25) !important;
+  border-radius: var(--radius-full) !important;
+  padding: 6px 14px !important;
+  font-weight: 700 !important;
+  transition: var(--transition) !important;
+}
+
+.view-details-btn:hover {
+  background: #E11D48 !important;
+  color: #ffffff !important;
+  border-color: #E11D48 !important;
+}
+
+/* Primary Crimson Buttons */
+.btn-cyan, .btn-primary {
+  background: linear-gradient(145deg, #E11D48 0%, #BE123C 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35) !important;
+}
+
+.btn-cyan:hover, .btn-primary:hover {
+  background: linear-gradient(145deg, #BE123C 0%, #991B1B 100%) !important;
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.45) !important;
+  transform: translateY(-1px);
+}
+
