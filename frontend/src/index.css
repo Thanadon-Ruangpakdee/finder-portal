@@ -2573,6 +2573,35 @@ h1, h2, h3, h4 {
   animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.btn-microsoft-signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #9E1B32;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.96rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(158, 27, 50, 0.35);
+}
+
+.btn-microsoft-signin:hover {
+  background-color: #831326;
+  box-shadow: 0 6px 18px rgba(158, 27, 50, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-microsoft-signin:active {
+  transform: translateY(0);
+}
+
 .login-header {
   text-align: center;
   margin-bottom: 24px;

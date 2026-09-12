@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { handleAdLogin, mockLogin, getCurrentUser, getAllUsers, updateUserRole, updateProfile } from '../controllers/authController';
+import { handleAdLogin, mockLogin, getCurrentUser, getAllUsers, updateUserRole, updateProfile, handleMicrosoftLogin, handleMicrosoftCallback } from '../controllers/authController';
 import { getItems, getItemById, createItem, updateItem, deleteItem } from '../controllers/itemController';
 import { submitClaim, getClaims, reviewClaim } from '../controllers/claimController';
 import { getPotentialMatches, reviewMatch } from '../controllers/matchController';
@@ -11,6 +11,8 @@ const router = Router();
 // ==========================================
 // Authentication Routes
 // ==========================================
+router.get('/auth/microsoft', handleMicrosoftLogin);
+router.get('/auth/callback', handleMicrosoftCallback);
 router.post('/auth/login-ad', handleAdLogin);
 router.post('/auth/login-mock', mockLogin);
 router.get('/auth/me', authenticateToken, getCurrentUser);

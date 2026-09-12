@@ -1,362 +1,194 @@
 import React, { useState } from 'react';
 import { api } from '../services/api';
-import { Sparkles, ShieldCheck } from './Icons';
 import { useT } from '../language';
 
 export default function LoginPortal({ onLoginSuccess }) {
   const t = useT();
-  const [activeTab, setActiveTab] = useState('signin'); // 'signin' | 'signup'
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [avatarMode, setAvatarMode] = useState('avatar'); // 'avatar' | 'custom'
-  const [avatarSeed, setAvatarSeed] = useState('user');
-  const [customAvatarUrl, setCustomAvatarUrl] = useState('');
+  const [role, setRole] = useState('STUDENT');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Computes the dicebear adventurer avatar URL dynamically based on seed
-  const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(avatarSeed)}`;
+  const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-  const finalAvatarUrl = avatarMode === 'avatar' 
-    ? avatarUrl 
-    : (customAvatarUrl || 'https://api.dicebear.com/7.x/adventurer/svg?seed=default');
+  // Real OIDC Microsoft Entra ID Login Redirect
+  const handleMicrosoftSignIn = () => {
+    const authEndpoint = isLocalhost 
+      ? 'http://localhost:5001/api/v1/auth/microsoft' 
+      : '/project/api/v1/auth/microsoft';
+    window.location.href = authEndpoint;
+  };
 
-  const handleLogin = (e) => {
+  // Quick preset login handler
+  const handleQuickLogin = (presetRole) => {
+    setLoading(true);
+    setError('');
+
+    api.loginMock(presetRole)
+      .then(data => {
+        setLoading(false);
+        onLoginSuccess(data.user);
+      })
+      .catch(err => {
+        setLoading(false);
+        setError(err.message || t('Quick sign-in failed.'));
+      });
+  };
+
+  // Dev specific user login handler
+  const handleDevSubmit = (e) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) {
-      setError(t('Please fill in email and password.'));
-      return;
-    }
-
-    if (!email.endsWith('@au.edu') && !email.endsWith('@ms.au.edu')) {
-      setError(t('Please use a valid Assumption University email (@au.edu or @ms.au.edu).'));
+    if (!email.trim() || !name.trim()) {
+      setError(t('Please fill in email and name.'));
       return;
     }
 
     setLoading(true);
     setError('');
 
-    // Determine role based on email pattern
-    let role = 'STUDENT';
-    if (email.startsWith('staff.') || email.startsWith('teacher.')) role = 'TEACHER';
-    if (email.startsWith('admin.')) role = 'ADMIN';
-
-    // Simulate Active Directory OIDC Verification
-    setTimeout(() => {
-      // For sign-in, we simulate looking up their details
-      const userName = email.split('@')[0].replace('.', ' ');
-      api.loginAd({ email, name: userName, role })
-        .then(data => {
-          setLoading(false);
-          onLoginSuccess(data.user);
-        })
-        .catch(err => {
-          setLoading(false);
-          setError(err.message || t('SSO authentication failed.'));
-        });
-    }, 1200);
-  };
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (!email.trim() || !name.trim() || !password.trim()) {
-      setError(t('Please fill in all registration fields.'));
-      return;
-    }
-
-    if (!email.endsWith('@au.edu') && !email.endsWith('@ms.au.edu')) {
-      setError(t('Please use a valid Assumption University email (@au.edu or @ms.au.edu).'));
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
-    let role = 'STUDENT';
-    if (email.startsWith('staff.') || email.startsWith('teacher.')) role = 'TEACHER';
-    if (email.startsWith('admin.')) role = 'ADMIN';
-
-    setTimeout(() => {
-      api.loginAd({ email, name, role, avatar: finalAvatarUrl })
-        .then(data => {
-          setLoading(false);
-          onLoginSuccess(data.user);
-        })
-        .catch(err => {
-          setLoading(false);
-          setError(err.message || t('Failed to create student account.'));
-        });
-    }, 1200);
-  };
-
-  const handlePresetLogin = (presetEmail, presetName) => {
-    setLoading(true);
-    setError('');
-    setEmail(presetEmail);
-    setPassword('password123');
-
-    let role = 'STUDENT';
-    if (presetEmail.startsWith('staff.') || presetEmail.startsWith('teacher.')) role = 'TEACHER';
-    if (presetEmail.startsWith('admin.')) role = 'ADMIN';
-
-    setTimeout(() => {
-      api.loginAd({ email: presetEmail, name: presetName, role })
-        .then(data => {
-          setLoading(false);
-          onLoginSuccess(data.user);
-        })
-        .catch(err => {
-          setLoading(false);
-          setError(t('AD SSO authentication failed.'));
-        });
-    }, 800);
-  };
-
-  const randomizeAvatarSeed = () => {
-    const randomSeed = Math.random().toString(36).substring(7);
-    setAvatarSeed(randomSeed);
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setCustomAvatarUrl(reader.result); // Base64 image
-    };
-    reader.readAsDataURL(file);
+    api.loginAd({ email, name, role })
+      .then(data => {
+        setLoading(false);
+        onLoginSuccess(data.user);
+      })
+      .catch(err => {
+        setLoading(false);
+        setError(err.message || t('Dev authentication failed.'));
+      });
   };
 
   return (
     <div className="login-portal-overlay">
       <div className="login-card glass-card">
-        {/* Crest & Title */}
-        <div className="login-header">
-          <div className="login-crest">
-            <ShieldCheck size={36} className="text-rose" />
-          </div>
-          <h1 className="login-title">{t('Assumption University')}</h1>
-          <p className="login-subtitle">{t('OIDC Single Sign-On (SSO)')}</p>
-        </div>
-
-        {/* Tab Selection */}
-        <div className="login-tabs">
-          <button 
-            type="button" 
-            className={`login-tab-btn ${activeTab === 'signin' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('signin'); setError(''); }}
-          >
-            {t('Sign In')}
-          </button>
-          <button 
-            type="button" 
-            className={`login-tab-btn ${activeTab === 'signup' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('signup'); setError(''); }}
-          >
-            {t('Register / Sign Up')}
-          </button>
+        {/* Header */}
+        <div className="login-header" style={{ textAlign: 'left', marginBottom: '22px' }}>
+          <h1 className="login-title" style={{ fontSize: '1.75rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
+            {t('Sign in')}
+          </h1>
+          <p className="login-subtitle" style={{ fontSize: '0.92rem', color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal', marginTop: '4px' }}>
+            {t('Use your Assumption University account.')}
+          </p>
         </div>
 
         {error && <div className="login-error-banner">{error}</div>}
 
-        {activeTab === 'signin' ? (
-          /* Sign In Form */
-          <form className="login-form" onSubmit={handleLogin}>
-            <div className="login-form-group">
-              <label className="login-form-label">{t('University Email Address')}</label>
-              <input
-                type="email"
-                className="login-form-input"
-                placeholder="u6610308@ms.au.edu"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-
-            <div className="login-form-group">
-              <label className="login-form-label">{t('Password')}</label>
-              <input 
-                type="password"
-                className="login-form-input"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-
-            <button 
-              type="submit" 
-              className="btn btn-primary btn-block btn-login"
-              disabled={loading}
-            >
-              {loading ? t('Connecting to Microsoft Azure AD...') : t('Sign In with Microsoft AD')}
-            </button>
-          </form>
-        ) : (
-          /* Sign Up Form with Customizer */
-          <form className="login-form" onSubmit={handleRegister}>
-            <div className="login-form-group">
-              <label className="login-form-label">{t('Full Name')}</label>
-              <input
-                type="text"
-                className="login-form-input"
-                placeholder={t('e.g. Thanadon Ruangpakdee')}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-
-            <div className="login-form-group">
-              <label className="login-form-label">{t('University Email Address')}</label>
-              <input
-                type="email"
-                className="login-form-input"
-                placeholder="u6610308@ms.au.edu or staff.somchai@au.edu"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-
-            <div className="login-form-group">
-              <label className="login-form-label">{t('Password')}</label>
-              <input 
-                type="password"
-                className="login-form-input"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-
-            {/* Live Profile Customizer during Registration */}
-            <div className="register-avatar-customizer">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <span className="login-form-label" style={{ margin: 0 }}>{t('Customize Profile Image')}</span>
-                
-                {/* Image Mode Switcher */}
-                <div className="segmented-control" style={{ fontSize: '0.68rem', padding: '2px' }}>
-                  <button 
-                    type="button" 
-                    className={`segment-btn ${avatarMode === 'avatar' ? 'active' : ''}`}
-                    style={{ padding: '3px 8px' }}
-                    onClick={() => setAvatarMode('avatar')}
-                  >
-                    {t('Avatar')}
-                  </button>
-                  <button 
-                    type="button" 
-                    className={`segment-btn ${avatarMode === 'custom' ? 'active' : ''}`}
-                    style={{ padding: '3px 8px' }}
-                    onClick={() => setAvatarMode('custom')}
-                  >
-                    {t('Photo')}
-                  </button>
-                </div>
-              </div>
-
-              <div className="register-avatar-row">
-                <div className="register-avatar-preview">
-                  <img src={finalAvatarUrl} alt={t('Avatar')} className="avatar-register-img" />
-                </div>
-
-                <div className="register-avatar-controls">
-                  {avatarMode === 'avatar' ? (
-                    <div style={{ display: 'flex', gap: '6px', width: '100%' }}>
-                      <input 
-                        type="text" 
-                        className="login-form-input text-xs" 
-                        style={{ padding: '6px 10px', flex: 1 }}
-                        placeholder={t('Avatar seed')}
-                        value={avatarSeed}
-                        onChange={(e) => setAvatarSeed(e.target.value)}
-                        disabled={loading}
-                      />
-                      <button 
-                        type="button" 
-                        className="btn btn-glass btn-sm"
-                        style={{ padding: '6px 10px', fontSize: '0.72rem', flexShrink: 0 }}
-                        onClick={randomizeAvatarSeed}
-                        disabled={loading}
-                      >
-                        {t('🎲 Random')}
-                      </button>
-                    </div>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%' }}>
-                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                        <label className="btn btn-glass btn-sm" style={{ cursor: 'pointer', margin: 0, padding: '4px 8px', fontSize: '0.72rem' }}>
-                          {t('Choose Image')}
-                          <input
-                            type="file" 
-                            accept="image/*" 
-                            onChange={handleFileChange} 
-                            style={{ display: 'none' }}
-                          />
-                        </label>
-                        <span className="text-xxs text-muted">
-                          {customAvatarUrl.startsWith('data:') ? t('✓ Photo selected') : t('Select local photo')}
-                        </span>
-                      </div>
-                      {customAvatarUrl.startsWith('data:') && (
-                        <button 
-                          type="button"
-                          className="text-xxs text-rose" 
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}
-                          onClick={() => setCustomAvatarUrl('')}
-                        >
-                          {t('✕ Clear selected photo')}
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <button 
-              type="submit" 
-              className="btn btn-primary btn-block btn-login"
-              disabled={loading}
-            >
-              {loading ? t('Creating OIDC Profile...') : t('Create Account & Sign In')}
-            </button>
-          </form>
-        )}
-
-        <div className="login-divider">
-          <span>{t('Or Quick Dev-Login Presets')}</span>
+        {/* Primary Action Button: Sign in with Microsoft */}
+        <div style={{ marginBottom: '24px' }}>
+          <button 
+            type="button" 
+            className="btn-microsoft-signin"
+            onClick={handleMicrosoftSignIn}
+            disabled={loading}
+          >
+            {/* 4-Color Microsoft Grid Logo */}
+            <svg viewBox="0 0 21 21" width="20" height="20" style={{ flexShrink: 0 }}>
+              <rect x="1" y="1" width="9" height="9" fill="#F25022" />
+              <rect x="11" y="1" width="9" height="9" fill="#7FBA00" />
+              <rect x="1" y="11" width="9" height="9" fill="#00A4EF" />
+              <rect x="11" y="11" width="9" height="9" fill="#FFB900" />
+            </svg>
+            <span>{t('Sign in with Microsoft')}</span>
+          </button>
         </div>
 
-        {/* Quick Dev Presets */}
-        <div className="login-presets">
-          <button 
-            className="preset-btn"
-            onClick={() => handlePresetLogin('student.thanadon@ms.au.edu', 'Thanadon Ruangpakdee')}
-            disabled={loading}
-          >
-            {t('Student')} (Thanadon)
-          </button>
-          <button 
-            className="preset-btn"
-            onClick={() => handlePresetLogin('staff.somchai@au.edu', 'Somchai Prasert')}
-            disabled={loading}
-          >
-            {t('Teacher')} (Somchai)
-          </button>
-          <button 
-            className="preset-btn"
-            onClick={() => handlePresetLogin('admin.kitirat@au.edu', 'Kitirat Pisithaporn')}
-            disabled={loading}
-          >
-            {t('Admin')} (Kitirat)
-          </button>
+        {/* Divider */}
+        <div className="login-divider" style={{ margin: '20px 0 24px' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>dev / test sign-in</span>
+        </div>
+
+        {/* Dev / Test Sign-In Section */}
+        <div style={{ textAlign: 'left' }}>
+          <label className="login-form-label" style={{ display: 'block', marginBottom: '10px' }}>
+            {t('Quick login')}
+          </label>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '18px' }}>
+            <button 
+              type="button" 
+              className="btn btn-glass"
+              style={{ padding: '9px 12px', fontSize: '0.88rem', fontWeight: 600 }}
+              onClick={() => handleQuickLogin('STUDENT')}
+              disabled={loading}
+            >
+              {t('Student')}
+            </button>
+            <button 
+              type="button" 
+              className="btn btn-glass"
+              style={{ padding: '9px 12px', fontSize: '0.88rem', fontWeight: 600 }}
+              onClick={() => handleQuickLogin('TEACHER')}
+              disabled={loading}
+            >
+              {t('Staff')}
+            </button>
+            <button 
+              type="button" 
+              className="btn btn-glass"
+              style={{ padding: '9px 12px', fontSize: '0.88rem', fontWeight: 600 }}
+              onClick={() => handleQuickLogin('ADMIN')}
+              disabled={loading}
+            >
+              {t('Admin')}
+            </button>
+          </div>
+
+          {/* Specific user sign in details */}
+          <details style={{ marginTop: '14px' }}>
+            <summary style={{ cursor: 'pointer', fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+              ▼ {t('Or sign in as a specific user')}
+            </summary>
+
+            <form onSubmit={handleDevSubmit} className="login-form" style={{ marginTop: '14px', gap: '12px' }}>
+              <div className="login-form-group">
+                <label className="login-form-label">{t('Email')}</label>
+                <input
+                  type="email"
+                  className="login-form-input"
+                  placeholder="you@example.edu"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="login-form-group">
+                <label className="login-form-label">{t('Name')}</label>
+                <input
+                  type="text"
+                  className="login-form-input"
+                  placeholder="Dev User"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="login-form-group">
+                <label className="login-form-label">{t('Role')}</label>
+                <select 
+                  className="filter-select" 
+                  style={{ width: '100%', padding: '9px 12px' }}
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  disabled={loading}
+                >
+                  <option value="STUDENT">{t('Student')}</option>
+                  <option value="TEACHER">{t('Staff / Teacher')}</option>
+                  <option value="ADMIN">{t('Admin')}</option>
+                </select>
+              </div>
+
+              <button 
+                type="submit" 
+                className="btn btn-glass w-full"
+                style={{ marginTop: '8px', padding: '9px', fontWeight: 600 }}
+                disabled={loading}
+              >
+                {loading ? t('Signing in...') : t('Sign in (dev)')}
+              </button>
+            </form>
+          </details>
         </div>
       </div>
     </div>

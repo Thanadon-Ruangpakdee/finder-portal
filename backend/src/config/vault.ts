@@ -13,6 +13,10 @@ export interface AppConfig {
   MY_PEER_API_KEY: string;
   THEIR_PEER_API_KEY: string;
   SPACE_RESERVE_API_URL: string;
+  AZURE_TENANT_ID: string;
+  AZURE_CLIENT_ID: string;
+  AZURE_CLIENT_SECRET: string;
+  AZURE_REDIRECT_URI: string;
 }
 
 const config: Partial<AppConfig> = {
@@ -22,7 +26,11 @@ const config: Partial<AppConfig> = {
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   MY_PEER_API_KEY: process.env.MY_PEER_API_KEY || 'fp_peer_api_key_xyz_998877',
   THEIR_PEER_API_KEY: process.env.THEIR_PEER_API_KEY || '6a64c01f1380eb89ca382565562b0d4216cb1ab1afc6aa24606bf3ef771ae9b3',
-  SPACE_RESERVE_API_URL: process.env.SPACE_RESERVE_API_URL || 'https://spacereserve.malaysiawest.cloudapp.azure.com/spacereserve/api/v1'
+  SPACE_RESERVE_API_URL: process.env.SPACE_RESERVE_API_URL || 'https://spacereserve.malaysiawest.cloudapp.azure.com/spacereserve/api/v1',
+  AZURE_TENANT_ID: process.env.AZURE_TENANT_ID || 'c1f3dc23-b7f8-48d3-9b5d-2b12f158f01f',
+  AZURE_CLIENT_ID: process.env.AZURE_CLIENT_ID || '00fbc6b2-fea9-4779-ae5c-ae9c8aa606a8',
+  AZURE_CLIENT_SECRET: process.env.AZURE_CLIENT_SECRET || '',
+  AZURE_REDIRECT_URI: process.env.AZURE_REDIRECT_URI || 'https://thanadon-bad2026.koreacentral.cloudapp.azure.com/project/api/v1/auth/callback'
 };
 
 export async function initConfig(): Promise<AppConfig> {

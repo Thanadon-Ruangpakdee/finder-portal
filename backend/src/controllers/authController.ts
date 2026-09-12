@@ -7,6 +7,110 @@ const prisma = new PrismaClient();
 
 // In production, users authenticate via university AD and get an ID Token.
 // We verify this token and register/update them in our database.
+export async function handleMicrosoftLogin(req: Request, res: Response) {
+  const config = getConfig();
+  const redirectUri = config.AZURE_REDIRECT_URI;
+  const tenantId = config.AZURE_TENANT_ID;
+  const clientId = config.AZURE_CLIENT_ID;
+
+  const authUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/authorize?` +
+    new URLSearchParams({
+      client_id: clientId,
+      response_type: 'code',
+      redirect_uri: redirectUri,
+      response_mode: 'query',
+      scope: 'openid profile email'
+    }).toString();
+
+  return res.redirect(authUrl);
+}
+
+export async function handleMicrosoftCallback(req: Request, res: Response) {
+  const { code, error, error_description } = req.query;
+  const config = getConfig();
+
+  if (error || !code) {
+    console.error('[Microsoft Auth Error]:', error_description || error || 'No authorization code received');
+    return res.redirect(`/project/?error=${encodeURIComponent(String(error_description || 'Authentication cancelled'))}`);
+  }
+
+  try {
+    const tokenUrl = `https://login.microsoftonline.com/${config.AZURE_TENANT_ID}/oauth2/v2.0/token`;
+    const tokenParams = new URLSearchParams({
+      client_id: config.AZURE_CLIENT_ID,
+      client_secret: config.AZURE_CLIENT_SECRET,
+      code: String(code),
+      redirect_uri: config.AZURE_REDIRECT_URI,
+      grant_type: 'authorization_code'
+    });
+
+    const tokenRes = await fetch(tokenUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: tokenParams.toString()
+    });
+
+    if (!tokenRes.ok) {
+      const errText = await tokenRes.text();
+      console.error('[Microsoft Token Error]:', errText);
+      return res.redirect(`/project/?error=${encodeURIComponent('Failed to exchange token with Microsoft')}`);
+    }
+
+    const tokenData: any = await tokenRes.json();
+    const accessToken = tokenData.access_token;
+
+    // Fetch user profile from Microsoft Graph API
+    const userRes = await fetch('https://graph.microsoft.com/v1.0/me', {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    if (!userRes.ok) {
+      throw new Error('Failed to fetch user profile from Microsoft Graph');
+    }
+
+    const graphUser: any = await userRes.json();
+    const rawEmail = graphUser.mail || graphUser.userPrincipalName || '';
+    const name = graphUser.displayName || rawEmail.split('@')[0];
+    const normalizedEmail = rawEmail.toLowerCase().trim();
+
+    if (!normalizedEmail) {
+      return res.redirect(`/project/?error=${encodeURIComponent('No email associated with Microsoft Account')}`);
+    }
+
+    const userId = normalizedEmail.split('@')[0];
+    let assignedRole = 'STUDENT';
+    if (normalizedEmail.startsWith('staff.') || normalizedEmail.startsWith('teacher.')) assignedRole = 'TEACHER';
+    if (normalizedEmail.startsWith('admin.')) assignedRole = 'ADMIN';
+
+    let user = await prisma.user.findUnique({
+      where: { email: normalizedEmail }
+    });
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          id: userId,
+          email: normalizedEmail,
+          name,
+          role: assignedRole,
+          avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${userId}`
+        }
+      });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, name: user.name, role: user.role },
+      config.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    return res.redirect(`/project/?token=${token}`);
+  } catch (err: any) {
+    console.error('Microsoft Callback Error:', err);
+    return res.redirect(`/project/?error=${encodeURIComponent(err.message || 'Authentication failed')}`);
+  }
+}
+
 export async function handleAdLogin(req: Request, res: Response) {
   const { idToken, name, email, role, avatar } = req.body;
 

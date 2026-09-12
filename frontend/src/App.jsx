@@ -90,14 +90,27 @@ export default function App() {
       .catch(err => console.error('Failed to fetch stats:', err));
   };
 
-  // Try auto login from token on mount
+  // Try auto login from token on mount or parse token from Microsoft OIDC redirect
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenFromUrl = urlParams.get('token');
+    const errorFromUrl = urlParams.get('error');
+
+    if (errorFromUrl) {
+      showToast(`❌ ${t('Authentication Error:')} ${errorFromUrl}`);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (tokenFromUrl) {
+      sessionStorage.setItem('finder_jwt_token', tokenFromUrl);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     const token = sessionStorage.getItem('finder_jwt_token');
     if (token) {
       api.getCurrentUser()
         .then(user => {
           setCurrentUser(user);
           setCurrentRole(user.role);
+          showToast(`✓ ${t('Welcome back,')} ${user.name}!`);
         })
         .catch(err => {
           console.error('Auto login failed:', err);
