@@ -4396,6 +4396,68 @@ h1, h2, h3, h4 {
   border-color: rgba(225, 29, 72, 0.4);
 }
 
+/* SpaceReserve Live Result Card */
+.spacereserve-live-result-card {
+  margin-top: 10px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.live-source-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.live-source-text {
+  font-family: var(--font-mono);
+  color: #059669;
+}
+
+[data-theme="dark"] .live-source-text {
+  color: #34d399;
+}
+
+.live-booker-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+}
+
+.info-label {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  min-width: 100px;
+}
+
+.info-val {
+  color: var(--text-primary);
+  font-size: 0.86rem;
+}
+
+.text-crimson {
+  color: #BE123C !important;
+}
+
+[data-theme="dark"] .text-crimson {
+  color: #F43F5E !important;
+}
+
+
 
 
 

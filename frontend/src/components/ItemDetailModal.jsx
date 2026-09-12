@@ -33,10 +33,42 @@ export default function ItemDetailModal({
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
+  // Live SpaceReserve Booking State
+  const [peerBookingLoading, setPeerBookingLoading] = useState(false);
+  const [peerBookingData, setPeerBookingData] = useState(null);
+
   const t = useT();
   const lang = useLang();
 
   if (!item) return null;
+
+  const handleQuerySpaceReserveLive = () => {
+    setPeerBookingLoading(true);
+    setPeerBookingData(null);
+    const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const API_BASE = isLocalhost ? 'http://localhost:5001/api/v1' : '/project/api/v1';
+
+    fetch(`${API_BASE}/peer/check-bookings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionStorage.getItem('finder_jwt_token')}`
+      },
+      body: JSON.stringify({
+        location: item.location,
+        timestamp: item.createdAt || item.date || new Date().toISOString()
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        setPeerBookingData(data);
+        setPeerBookingLoading(false);
+      })
+      .catch(err => {
+        setPeerBookingData({ error: err.message });
+        setPeerBookingLoading(false);
+      });
+  };
 
   const rawImages = item.photoUrls || item.photos || (item.photoUrl ? [item.photoUrl] : []);
   const images = Array.isArray(rawImages) && rawImages.length > 0
@@ -244,15 +276,49 @@ export default function ItemDetailModal({
             </div>
             <button 
               className="btn btn-cyan btn-sm"
-              onClick={() => {
-                onClose();
-                onOpenPeerWithRoom(item.location);
-              }}
+              onClick={handleQuerySpaceReserveLive}
+              disabled={peerBookingLoading}
             >
-              <span>{t('Query SpaceReserve')}</span>
+              <span>{peerBookingLoading ? t('Checking...') : t('Check Active Booker')}</span>
               <ChevronRight size={16} />
             </button>
           </div>
+
+          {/* Live SpaceReserve Result Card */}
+          {peerBookingData && (
+            <div className="spacereserve-live-result-card glass-card">
+              <div className="live-source-badge">
+                <span className="live-dot">🟢</span>
+                <span className="live-source-text">source: {peerBookingData.source || 'Live SpaceReserve API'}</span>
+              </div>
+              {peerBookingData.booking ? (
+                <div className="live-booker-info">
+                  <div className="info-row">
+                    <span className="info-label">Booker Name:</span>
+                    <span className="info-val text-crimson font-bold">{peerBookingData.booking.bookerName || peerBookingData.booking.bookedBy || 'N/A'}</span>
+                  </div>
+                  <div className="info-row">
+                    <span className="info-label">Booker Email:</span>
+                    <span className="info-val font-mono">{peerBookingData.booking.bookerEmail || 'N/A'}</span>
+                  </div>
+                  {peerBookingData.booking.activeFrom && (
+                    <div className="info-row">
+                      <span className="info-label">Active Period:</span>
+                      <span className="info-val font-mono">
+                        {new Date(peerBookingData.booking.activeFrom).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} – {new Date(peerBookingData.booking.activeTo).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="live-booker-info">
+                  <div className="info-row text-muted text-xs">
+                    {t('No active booking record returned for this location.')}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Teacher / Admin Status Update Bar */}
           {isTeacherOrAdmin && (
