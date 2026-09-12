@@ -25,6 +25,16 @@ router.get('/users', authenticateToken, requireRole(['ADMIN']), getAllUsers);
 router.put('/users/:id/role', authenticateToken, requireRole(['ADMIN']), updateUserRole);
 
 // ==========================================
+// Bilateral Peer API Services (SpaceReserve)
+// ==========================================
+// Expose (Expects x-api-key header) - Supports both plural (/items/by-location) and singular (/item/by-location)
+router.get('/items/by-location', getItemsByLocation);
+router.get('/item/by-location', getItemsByLocation);
+
+// Consume (Authenticated local proxy)
+router.post('/peer/check-bookings', authenticateToken, checkPeerBookings);
+
+// ==========================================
 // Lost & Found Items Routes
 // ==========================================
 router.get('/items', authenticateToken, getItems);
@@ -45,15 +55,5 @@ router.post('/claims/:id/review', authenticateToken, requireRole(['TEACHER', 'AD
 // ==========================================
 router.get('/matches', authenticateToken, requireRole(['TEACHER', 'ADMIN']), getPotentialMatches);
 router.post('/matches/:id/review', authenticateToken, requireRole(['TEACHER', 'ADMIN']), reviewMatch);
-
-// ==========================================
-// Bilateral Peer API Services (SpaceReserve)
-// ==========================================
-// Expose (Expects x-api-key header) - Supports both plural (/items/by-location) and singular (/item/by-location)
-router.get('/items/by-location', getItemsByLocation);
-router.get('/item/by-location', getItemsByLocation);
-
-// Consume (Authenticated local proxy)
-router.post('/peer/check-bookings', authenticateToken, checkPeerBookings);
 
 export default router;
