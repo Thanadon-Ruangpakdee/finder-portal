@@ -1,7 +1,11 @@
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
-import { sendClaimApprovalEmail, sendClaimRejectionEmail } from '../services/emailService';
+import { 
+  sendClaimApprovalEmail, 
+  sendClaimRejectionEmail, 
+  sendClaimSubmittedNotificationToReporter 
+} from '../services/emailService';
 
 const prisma = new PrismaClient();
 
@@ -42,10 +46,26 @@ export async function submitClaim(req: AuthenticatedRequest, res: Response) {
         status: 'PENDING'
       },
       include: {
-        item: true,
-        claimant: { select: { name: true, email: true } }
+        item: {
+          include: {
+            reporter: { select: { id: true, name: true, email: true } }
+          }
+        },
+        claimant: { select: { id: true, name: true, email: true } }
       }
     });
+
+    // Send notification email to the user who posted/reported the item asynchronously
+    if (newClaim.item?.reporter?.email) {
+      sendClaimSubmittedNotificationToReporter(
+        newClaim.item.reporter.email,
+        newClaim.item.reporter.name || 'User',
+        newClaim.claimant?.name || 'AU Student',
+        newClaim.claimant?.email || 'N/A',
+        newClaim.item.title,
+        proofText
+      );
+    }
 
     return res.status(201).json(newClaim);
   } catch (err: any) {

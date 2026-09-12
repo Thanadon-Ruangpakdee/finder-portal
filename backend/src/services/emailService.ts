@@ -252,3 +252,81 @@ export async function sendMatchNotificationEmail(
     console.error(`[Email Service Error] Failed to send match email: ${err.message}`);
   }
 }
+
+/**
+ * 4. Send Claim Submitted Notification Email to Item Reporter
+ */
+export async function sendClaimSubmittedNotificationToReporter(
+  reporterEmail: string,
+  reporterName: string,
+  claimantName: string,
+  claimantEmail: string,
+  itemTitle: string,
+  proofText: string
+) {
+  if (!reporterEmail) return;
+
+  try {
+    const transporter = await getTransporter();
+
+    const htmlContent = `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; color: #f8fafc;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%); padding: 28px 24px; text-align: center;">
+          <h1 style="margin: 0; font-size: 24px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">Finder<span style="color: #FDE047;">Portal</span></h1>
+          <p style="margin: 4px 0 0; font-size: 13px; color: #ffe4e6; font-weight: 600;">Assumption University • Lost & Found System</p>
+        </div>
+
+        <!-- Body -->
+        <div style="padding: 28px 24px;">
+          <div style="display: inline-block; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 20px; margin-bottom: 16px;">
+            📩 มีผู้ส่งคำร้องขอรับคืนสิ่งของที่คุณโพสต์ (New Claim Notification)
+          </div>
+
+          <h2 style="font-size: 18px; font-weight: 700; color: #ffffff; margin-top: 0;">เรียนคุณ ${reporterName},</h2>
+
+          <p style="font-size: 14px; line-height: 1.6; color: #cbd5e1;">
+            มีการยื่นคำร้องขอรับคืนรายการที่คุณได้แจ้งไว้: <strong style="color: #f43f5e;">"${itemTitle}"</strong>
+          </p>
+
+          <!-- Details Card -->
+          <div style="background: rgba(30, 41, 59, 0.7); border-left: 4px solid #F59E0B; padding: 16px; border-radius: 8px; margin: 20px 0;">
+            <div style="font-size: 12px; color: #94a3b8; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">รายละเอียดคำร้องขอรับคืน (Claimant Details):</div>
+            <p style="margin: 4px 0; font-size: 13px; color: #e2e8f0;"><strong>ผู้ขอรับคืน:</strong> ${claimantName} (${claimantEmail})</p>
+            <p style="margin: 8px 0 4px; font-size: 13px; color: #e2e8f0;"><strong>หลักฐานยืนยันที่ระบุ:</strong></p>
+            <div style="background: rgba(15, 23, 42, 0.6); padding: 10px 12px; border-radius: 6px; font-size: 13px; color: #cbd5e1; font-style: italic; border: 1px dashed #334155;">
+              "${proofText}"
+            </div>
+          </div>
+
+          <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5;">
+            เจ้าหน้าที่กำลังดำเนินการตรวจสอบหลักฐานคำร้องดังกล่าว คุณสามารถเข้าสู่ระบบ Finder Portal เพื่อติดตามสถานะได้ทันที
+          </p>
+
+          <hr style="border: none; border-top: 1px solid #334155; margin: 24px 0;" />
+
+          <div style="text-align: center; font-size: 11px; color: #64748b;">
+            ข้อความนี้ส่งจากระบบอัตโนมัติ Finder Portal (Assumption University)<br />
+            © 2026 Finder Portal Team • AU Campus Lost & Found Operations
+          </div>
+        </div>
+      </div>
+    `;
+
+    const info = await transporter.sendMail({
+      from: EMAIL_FROM,
+      to: reporterEmail,
+      subject: `[Finder Portal] มีผู้ส่งคำร้องขอรับคืน "${itemTitle}"`,
+      html: htmlContent
+    });
+
+    console.log(`[Email Service] Claim notification email sent to reporter: ${reporterEmail} (MsgID: ${info.messageId})`);
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    if (previewUrl) {
+      console.log(`[Email Service] Ethereal Email Preview URL: ${previewUrl}`);
+    }
+  } catch (err: any) {
+    console.error(`[Email Service Error] Failed to send claim notification to reporter: ${err.message}`);
+  }
+}
+
