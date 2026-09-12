@@ -58,19 +58,36 @@ export async function handleMicrosoftCallback(req: Request, res: Response) {
 
     const tokenData: any = await tokenRes.json();
     const accessToken = tokenData.access_token;
+    const idToken = tokenData.id_token;
 
-    // Fetch user profile from Microsoft Graph API
-    const userRes = await fetch('https://graph.microsoft.com/v1.0/me', {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    });
+    let rawEmail = '';
+    let name = '';
 
-    if (!userRes.ok) {
-      throw new Error('Failed to fetch user profile from Microsoft Graph');
+    // 1. Decode Microsoft ID Token payload (Standard OIDC Claims)
+    if (idToken) {
+      const decoded: any = jwt.decode(idToken);
+      if (decoded) {
+        rawEmail = decoded.preferred_username || decoded.email || decoded.upn || decoded.unique_name || '';
+        name = decoded.name || (rawEmail ? rawEmail.split('@')[0] : '');
+      }
     }
 
-    const graphUser: any = await userRes.json();
-    const rawEmail = graphUser.mail || graphUser.userPrincipalName || '';
-    const name = graphUser.displayName || rawEmail.split('@')[0];
+    // 2. Fallback to Microsoft Graph API if ID token didn't contain email
+    if (!rawEmail && accessToken) {
+      try {
+        const userRes = await fetch('https://graph.microsoft.com/v1.0/me', {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        if (userRes.ok) {
+          const graphUser: any = await userRes.json();
+          rawEmail = graphUser.mail || graphUser.userPrincipalName || '';
+          if (!name) name = graphUser.displayName || rawEmail.split('@')[0];
+        }
+      } catch (graphErr) {
+        console.warn('[Microsoft Graph Warning]: Could not fetch from Graph API, using ID token claims.');
+      }
+    }
+
     const normalizedEmail = rawEmail.toLowerCase().trim();
 
     if (!normalizedEmail) {
