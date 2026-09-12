@@ -218,15 +218,27 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
                 </pre>
                 
                 {outgoingResponse.statusCode === 200 && (
-                  <div className="peer-match-insight-box">
-                    <CheckCircle2 size={18} className="text-emerald" />
-                    <div>
-                      <div className="font-semibold text-sm">{t('Owner Lead Discovered:')}</div>
-                      <div className="text-muted text-xs">
-                        {t('This room was booked by')} <strong>{outgoingResponse.data.bookedBy}</strong> ({outgoingResponse.data.bookerEmail}) {t('for')} "{outgoingResponse.data.scheduledEvent}".
+                  outgoingResponse.data?.active !== false && outgoingResponse.data?.booking ? (
+                    <div className="peer-match-insight-box" style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                      <CheckCircle2 size={18} className="text-emerald" />
+                      <div>
+                        <div className="font-semibold text-sm text-emerald">{t('Owner Lead Discovered:')}</div>
+                        <div className="text-muted text-xs">
+                          {t('This room was booked by')} <strong>{outgoingResponse.data.booking.bookerName || outgoingResponse.data.booking.bookedBy}</strong> ({outgoingResponse.data.booking.bookerEmail}).
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="peer-match-insight-box" style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
+                      <Building2 size={18} className="text-cyan" />
+                      <div>
+                        <div className="font-semibold text-sm text-cyan">{t('Unreserved Room / Public Area')}</div>
+                        <div className="text-muted text-xs">
+                          {t('No active SpaceReserve booking for this location. AI Matcher is recommended to pair visual and description features with lost items.')}
+                        </div>
+                      </div>
+                    </div>
+                  )
                 )}
               </div>
             ) : (

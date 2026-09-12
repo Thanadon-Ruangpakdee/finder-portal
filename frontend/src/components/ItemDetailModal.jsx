@@ -284,36 +284,62 @@ export default function ItemDetailModal({
             </button>
           </div>
 
-          {/* Live SpaceReserve Result Card */}
+          {/* Live SpaceReserve Result Card (2 States: Active Booking vs Unreserved/Public Area) */}
           {peerBookingData && (
-            <div className="spacereserve-live-result-card glass-card">
-              <div className="live-source-badge">
-                <span className="live-dot">🟢</span>
-                <span className="live-source-text">source: {peerBookingData.source || 'Live SpaceReserve API'}</span>
+            <div 
+              className="spacereserve-live-result-card glass-card"
+              style={{
+                marginTop: '12px',
+                padding: '14px 16px',
+                borderRadius: '12px',
+                background: (peerBookingData.active !== false && peerBookingData.booking)
+                  ? 'rgba(16, 185, 129, 0.08)'
+                  : 'rgba(59, 130, 246, 0.08)',
+                border: (peerBookingData.active !== false && peerBookingData.booking)
+                  ? '1px solid rgba(16, 185, 129, 0.25)'
+                  : '1px solid rgba(59, 130, 246, 0.25)'
+              }}
+            >
+              <div className="live-source-badge" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: (peerBookingData.active !== false && peerBookingData.booking) ? '#10b981' : '#3b82f6', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>{(peerBookingData.active !== false && peerBookingData.booking) ? '🟢' : 'ℹ️'}</span>
+                  <span>{(peerBookingData.active !== false && peerBookingData.booking) ? t('Active Booking Found') : t('Unreserved / Public Area')}</span>
+                </span>
+                <span className="live-source-text" style={{ fontSize: '0.7rem', opacity: 0.75, fontFamily: 'monospace' }}>
+                  source: {peerBookingData.source || 'SpaceReserve API'}
+                </span>
               </div>
-              {peerBookingData.booking ? (
-                <div className="live-booker-info">
-                  <div className="info-row">
-                    <span className="info-label">Booker Name:</span>
-                    <span className="info-val text-crimson font-bold">{peerBookingData.booking.bookerName || peerBookingData.booking.bookedBy || 'N/A'}</span>
+
+              {(peerBookingData.active !== false && peerBookingData.booking) ? (
+                <div className="live-booker-info" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <div className="info-row" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                    <span className="info-label" style={{ opacity: 0.8 }}>{t('Booker Name')}:</span>
+                    <span className="info-val text-crimson font-bold">
+                      {peerBookingData.booking.bookerName || peerBookingData.booking.bookedBy || 'N/A'}
+                    </span>
                   </div>
-                  <div className="info-row">
-                    <span className="info-label">Booker Email:</span>
-                    <span className="info-val font-mono">{peerBookingData.booking.bookerEmail || 'N/A'}</span>
+                  <div className="info-row" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                    <span className="info-label" style={{ opacity: 0.8 }}>{t('Booker Email')}:</span>
+                    <span className="info-val font-mono" style={{ color: '#06b6d4' }}>
+                      {peerBookingData.booking.bookerEmail || 'N/A'}
+                    </span>
                   </div>
                   {peerBookingData.booking.activeFrom && (
-                    <div className="info-row">
-                      <span className="info-label">Active Period:</span>
-                      <span className="info-val font-mono">
+                    <div className="info-row" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                      <span className="info-label" style={{ opacity: 0.8 }}>{t('Active Period')}:</span>
+                      <span className="info-val font-mono" style={{ opacity: 0.9 }}>
                         {new Date(peerBookingData.booking.activeFrom).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} – {new Date(peerBookingData.booking.activeTo).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                       </span>
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="live-booker-info">
-                  <div className="info-row text-muted text-xs">
-                    {t('No active booking record returned for this location.')}
+                <div className="live-no-booking-info" style={{ padding: '2px 0' }}>
+                  <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#60a5fa', marginBottom: '4px' }}>
+                    {t('ไม่พบรายชื่อผู้จองห้องพัก ณ เวลาที่พบของ')}
+                  </div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.45' }}>
+                    {t('พื้นที่นี้เป็นพื้นที่สาธารณะหรือไม่มีการจองผ่าน SpaceReserve — แนะนำให้ใช้ระบบ AI Matcher ในการเปรียบเทียบภาพและคำอธิบายเพื่อค้นหาเจ้าของสิ่งของ')}
                   </div>
                 </div>
               )}

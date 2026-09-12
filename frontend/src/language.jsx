@@ -267,6 +267,18 @@ const TH = {
   'Simulate SpaceReserve Request': 'จำลองคำขอจาก SpaceReserve',
   'Finder Portal JSON Output': 'ผลลัพธ์ JSON จาก Finder Portal',
   'Awaiting Incoming Request': 'รอคำขอเข้ามา',
+  'SpaceReserve Room Intelligence': 'ข้อมูลการจองห้องจาก SpaceReserve',
+  'Check who scheduled': 'ตรวจสอบผู้จองห้อง',
+  'at this time.': 'ณ ช่วงเวลานี้',
+  'Check Active Booker': 'ตรวจสอบรายชื่อผู้จอง',
+  'Checking...': 'กำลังตรวจสอบ...',
+  'Active Booking Found': 'พบข้อมูลการจองห้องพัก',
+  'Unreserved / Public Area': 'พื้นที่สาธารณะ / ไม่มีผู้จอง',
+  'No active booking record returned for this location.': 'ไม่พบข้อมูลการจองห้องพักในระบบ SpaceReserve',
+  'No active SpaceReserve booking for this location. AI Matcher is recommended to pair visual and description features with lost items.': 'ไม่พบการจองห้องพักในระบบ SpaceReserve สำหรับสถานที่นี้ — แนะนำใช้ระบบ AI Matcher ช่วยจับคู่ลักษณะของกับประกาศของหาย',
+  'Booker Name': 'ชื่อผู้จอง',
+  'Booker Email': 'อีเมลผู้จอง',
+  'Active Period': 'ช่วงเวลาการจอง',
 
   // ---------- ตั้งค่า / โปรไฟล์ ----------
   'System & Account Settings': 'ตั้งค่าระบบและบัญชีผู้ใช้',

@@ -88,11 +88,23 @@ export async function checkPeerBookings(req: Request, res: Response) {
     clearTimeout(timeoutId);
 
     if (response.ok) {
-      const data = await response.json();
-      return res.json({
-        source: 'Live SpaceReserve API',
-        booking: data
-      });
+      const data: any = await response.json();
+      const hasBooking = data && (data.active !== false) && (data.bookerName || data.bookedBy || (data.booking && (data.booking.bookerName || data.booking.bookedBy)));
+
+      if (hasBooking) {
+        return res.json({
+          source: 'Live SpaceReserve API',
+          active: true,
+          booking: data.booking || data
+        });
+      } else {
+        return res.json({
+          source: 'Live SpaceReserve API',
+          active: false,
+          booking: null,
+          message: 'No active room reservation at this timestamp'
+        });
+      }
     }
 
     throw new Error(`SpaceReserve responded with status ${response.status}`);
@@ -191,18 +203,21 @@ export async function checkPeerBookings(req: Request, res: Response) {
       }
     };
 
-    const simulatedBooking = mockBookings[location] || {
-      bookingId: `bk_${Date.now().toString().slice(-5)}`,
-      room: location,
-      bookerName: 'AU Student Booker',
-      bookerEmail: 'student.au@au.edu',
-      activeFrom: timestamp,
-      activeTo: timestamp
-    };
+    const simulatedBooking = mockBookings[location];
+
+    if (simulatedBooking) {
+      return res.json({
+        source: 'SpaceReserve API (Simulation Fallback)',
+        active: true,
+        booking: simulatedBooking
+      });
+    }
 
     return res.json({
       source: 'SpaceReserve API (Simulation Fallback)',
-      booking: simulatedBooking
+      active: false,
+      booking: null,
+      message: 'Unreserved Public Room / No Active SpaceReserve Booking'
     });
   }
 }
