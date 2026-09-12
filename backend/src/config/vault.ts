@@ -21,8 +21,8 @@ const config: Partial<AppConfig> = {
   JWT_SECRET: process.env.JWT_SECRET,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   MY_PEER_API_KEY: process.env.MY_PEER_API_KEY || 'fp_peer_api_key_xyz_998877',
-  THEIR_PEER_API_KEY: process.env.THEIR_PEER_API_KEY || 'sr_peer_token_88192a_sec',
-  SPACE_RESERVE_API_URL: process.env.SPACE_RESERVE_API_URL || 'https://spacereserve.uni.edu/api/v1'
+  THEIR_PEER_API_KEY: process.env.THEIR_PEER_API_KEY || '6a64c01f1380eb89ca382565562b0d4216cb1ab1afc6aa24606bf3ef771ae9b3',
+  SPACE_RESERVE_API_URL: process.env.SPACE_RESERVE_API_URL || 'https://spacereserve.malaysiawest.cloudapp.azure.com/spacereserve/api/v1'
 };
 
 export async function initConfig(): Promise<AppConfig> {

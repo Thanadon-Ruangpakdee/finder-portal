@@ -30,11 +30,14 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
 
   const [copied, setCopied] = useState(false);
 
+  const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const API_BASE = isLocalhost ? 'http://localhost:5001/api/v1' : '/project/api/v1';
+
   const handleRunOutgoingQuery = () => {
     setOutgoingLoading(true);
     setOutgoingResponse(null);
 
-    fetch('http://localhost:5001/api/v1/peer/check-bookings', {
+    fetch(`${API_BASE}/peer/check-bookings`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,7 +71,7 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
     setIncomingLoading(true);
     setIncomingResponse(null);
 
-    fetch(`http://localhost:5001/api/v1/items/by-location?location=${encodeURIComponent(incomingLocationQuery)}`, {
+    fetch(`${API_BASE}/items/by-location?location=${encodeURIComponent(incomingLocationQuery)}`, {
       headers: {
         'x-api-key': incomingApiKey
       }
@@ -152,21 +155,18 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
 
             <div className="api-endpoint-badge">
               <span className="http-method">GET</span>
-              <span className="http-url">https://spacereserve.uni.edu/api/v1/external/bookings/active-at</span>
+              <span className="http-url">https://spacereserve.malaysiawest.cloudapp.azure.com/spacereserve/api/v1/external/bookings/active-at</span>
             </div>
 
             <div className="input-group">
-              <label className="input-label">{t('Select Room to Inquire *')}</label>
-              <select 
-                className="select-field"
+              <label className="input-label">{t('Enter Room Name to Inquire *')}</label>
+              <input 
+                type="text"
+                className="input-field"
                 value={selectedRoom}
                 onChange={(e) => setSelectedRoom(e.target.value)}
-              >
-                <option value="Room 402 (Engineering Building)">{t('Room 402 (Engineering Building)')}</option>
-                <option value="Library Room 4B / Music Practice Lab">{t('Library Room 4B / Music Practice Lab')}</option>
-                <option value="Central Library (3rd Floor)">{t('Central Library (3rd Floor)')}</option>
-                <option value="Unknown Hallway 101">{t('Unknown Hallway 101 (Non-bookable space)')}</option>
-              </select>
+                placeholder={t('e.g. Room 402 (Engineering Building), CL Lounge 2nd Floor')}
+              />
             </div>
 
             <div className="input-group">
@@ -184,7 +184,7 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
                 <Key size={14} />
                 <span>{t('SpaceReserve Authentication Header:')}</span>
               </div>
-              <code>Authorization: Bearer sr_peer_token_88192a_sec</code>
+              <code>x-api-key: 6a64c01f1380eb89ca382565562b0d4216cb1afc6aa24606bf3ef771ae9b3</code>
             </div>
 
             <button 
