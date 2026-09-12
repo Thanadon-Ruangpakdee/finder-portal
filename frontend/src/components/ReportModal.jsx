@@ -83,8 +83,16 @@ export default function ReportModal({
     e.preventDefault();
     const finalBuilding = building === 'Other / Custom Building' ? (customBuilding.trim() || 'Campus Common Area') : building;
     const roomStr = roomNumber.trim();
+    
+    // SpaceReserve Known Rooms List
+    const spaceReserveRooms = ['CL-2-04', 'CL-2-05', 'CA Edit Suite 2', 'CA Edit Suite 3', 'CA Studio 1', 'CA Screening Room'];
+    
     let finalLocation = finalBuilding;
-    if (roomStr) {
+    if (spaceReserveRooms.includes(roomStr)) {
+      finalLocation = roomStr;
+    } else if (spaceReserveRooms.includes(finalBuilding)) {
+      finalLocation = finalBuilding;
+    } else if (roomStr) {
       const formattedRoom = roomStr.toLowerCase().startsWith('room') ? roomStr : `Room ${roomStr}`;
       finalLocation = `${formattedRoom} (${finalBuilding})`;
     }
@@ -228,14 +236,24 @@ export default function ReportModal({
                   value={building}
                   onChange={(e) => setBuilding(e.target.value)}
                 >
-                  <option value="Cathedral of Learning (CL Building)">{t('Cathedral of Learning (CL Building)')}</option>
-                  <option value="Engineering Building (VME Building)">{t('Engineering Building (VME Building)')}</option>
-                  <option value="Martin de Tours Hall (MSME Building)">{t('Martin de Tours Hall (MSME Building)')}</option>
-                  <option value="Saint Gabriel's Hall">{t("Saint Gabriel's Hall")}</option>
-                  <option value="Central Library Building">{t('Central Library Building')}</option>
-                  <option value="John Paul II Sports Center">{t('John Paul II Sports Center')}</option>
-                  <option value="AU Mall & Cafeteria">{t('AU Mall & Cafeteria')}</option>
-                  <option value="Other / Custom Building">{t('Other / Custom Building')}</option>
+                  <optgroup label="🏢 SpaceReserve Partner Rooms">
+                    <option value="CL-2-04">CL-2-04 (SpaceReserve)</option>
+                    <option value="CL-2-05">CL-2-05 (SpaceReserve)</option>
+                    <option value="CA Edit Suite 2">CA Edit Suite 2 (SpaceReserve)</option>
+                    <option value="CA Edit Suite 3">CA Edit Suite 3 (SpaceReserve)</option>
+                    <option value="CA Studio 1">CA Studio 1 (SpaceReserve)</option>
+                    <option value="CA Screening Room">CA Screening Room (SpaceReserve)</option>
+                  </optgroup>
+                  <optgroup label="🏫 AU Campus Buildings">
+                    <option value="Cathedral of Learning (CL Building)">{t('Cathedral of Learning (CL Building)')}</option>
+                    <option value="Engineering Building (VME Building)">{t('Engineering Building (VME Building)')}</option>
+                    <option value="Martin de Tours Hall (MSME Building)">{t('Martin de Tours Hall (MSME Building)')}</option>
+                    <option value="Saint Gabriel's Hall">{t("Saint Gabriel's Hall")}</option>
+                    <option value="Central Library Building">{t('Central Library Building')}</option>
+                    <option value="John Paul II Sports Center">{t('John Paul II Sports Center')}</option>
+                    <option value="AU Mall & Cafeteria">{t('AU Mall & Cafeteria')}</option>
+                    <option value="Other / Custom Building">{t('Other / Custom Building')}</option>
+                  </optgroup>
                 </select>
               </div>
             </div>
@@ -258,10 +276,16 @@ export default function ReportModal({
             {/* Room Number / Specific Area Input Box */}
             <div className="input-group">
               <label className="input-label">{t('Room Number / Specific Area')}</label>
+              <div className="quick-room-presets">
+                <span className="text-xs text-muted font-semibold mr-1">Quick SpaceReserve Rooms:</span>
+                <button type="button" className="btn-room-chip" onClick={() => { setBuilding('CL-2-04'); setRoomNumber('CL-2-04'); }}>CL-2-04</button>
+                <button type="button" className="btn-room-chip" onClick={() => { setBuilding('CA Edit Suite 2'); setRoomNumber('CA Edit Suite 2'); }}>CA Edit Suite 2</button>
+                <button type="button" className="btn-room-chip" onClick={() => { setBuilding('CL-2-05'); setRoomNumber('CL-2-05'); }}>CL-2-05</button>
+              </div>
               <input
                 type="text"
                 className="input-field"
-                placeholder={t('e.g. Room 402, Room 4B, 3rd Floor Pod')}
+                placeholder={t('e.g. CL-2-04, CA Edit Suite 2, Room 402')}
                 value={roomNumber}
                 onChange={(e) => setRoomNumber(e.target.value)}
               />
