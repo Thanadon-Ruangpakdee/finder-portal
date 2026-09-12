@@ -3262,8 +3262,9 @@ h1, h2, h3, h4 {
   width: 270px;
   flex-shrink: 0;
   height: 100vh;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   z-index: 60;
   display: flex;
   flex-direction: column;
@@ -3574,6 +3575,7 @@ h1, h2, h3, h4 {
 .app-main-column {
   flex: 1;
   min-width: 0;
+  margin-left: 270px;
   display: flex;
   flex-direction: column;
 }
@@ -3721,6 +3723,10 @@ h1, h2, h3, h4 {
 
 /* ---------- จอเล็ก: แถบซ้ายเลื่อนออกมา ---------- */
 @media (max-width: 1000px) {
+  .app-main-column {
+    margin-left: 0;
+  }
+
   .app-sidebar {
     position: fixed;
     left: 0;

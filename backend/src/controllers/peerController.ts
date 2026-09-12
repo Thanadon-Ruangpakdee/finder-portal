@@ -102,122 +102,26 @@ export async function checkPeerBookings(req: Request, res: Response) {
           source: 'Live SpaceReserve API',
           active: false,
           booking: null,
-          message: 'No active room reservation at this timestamp'
+          message: 'No active room reservation at this timestamp in SpaceReserve'
         });
       }
     }
 
-    throw new Error(`SpaceReserve responded with status ${response.status}`);
-  } catch (err: any) {
-    console.warn(`[Peer API Warning] Direct connection to SpaceReserve failed: ${err.message}. Falling back to simulation mode.`);
-    
-    // Fallback simulation: Return realistic mock booking matching the location
-    const mockBookings: { [key: string]: any } = {
-      'CL-2-04': {
-        bookingId: 'bk_cl204_9981',
-        room: 'CL-2-04',
-        bookerName: 'Supakorn Tangwong',
-        bookerEmail: 'student.supakorn@au.edu',
-        activeFrom: '2026-09-12T13:00:00Z',
-        activeTo: '2026-09-12T15:00:00Z'
-      },
-      'CL-2-05': {
-        bookingId: 'bk_cl205_9982',
-        room: 'CL-2-05',
-        bookerName: 'Natcha Srivirat',
-        bookerEmail: 'student.natcha@au.edu',
-        activeFrom: '2026-09-12T14:00:00Z',
-        activeTo: '2026-09-12T16:00:00Z'
-      },
-      'CA Edit Suite 2': {
-        bookingId: 'bk_ca2_8812',
-        room: 'CA Edit Suite 2',
-        bookerName: 'Thanadon Ruangpakdee',
-        bookerEmail: 'student.thanadon@au.edu',
-        activeFrom: '2026-09-12T10:00:00Z',
-        activeTo: '2026-09-12T12:00:00Z'
-      },
-      'CA Edit Suite 3': {
-        bookingId: 'bk_ca3_8813',
-        room: 'CA Edit Suite 3',
-        bookerName: 'Phattarapol Wongchai',
-        bookerEmail: 'student.phattarapol@au.edu',
-        activeFrom: '2026-09-12T11:00:00Z',
-        activeTo: '2026-09-12T13:00:00Z'
-      },
-      'CA Studio 1': {
-        bookingId: 'bk_cas1_7714',
-        room: 'CA Studio 1',
-        bookerName: 'Chanya Phasuk',
-        bookerEmail: 'student.chanya@au.edu',
-        activeFrom: '2026-09-12T09:00:00Z',
-        activeTo: '2026-09-12T11:00:00Z'
-      },
-      'CA Screening Room': {
-        bookingId: 'bk_casr_7715',
-        room: 'CA Screening Room',
-        bookerName: 'Kittisak Panyawong',
-        bookerEmail: 'student.kittisak@au.edu',
-        activeFrom: '2026-09-12T15:00:00Z',
-        activeTo: '2026-09-12T17:00:00Z'
-      },
-      'Campus Cafeteria (AU Mall)': {
-        bookingId: 'bk_mall_4401',
-        room: 'Campus Cafeteria (AU Mall)',
-        bookerName: 'Pichaya Boonma',
-        bookerEmail: 'student.pichaya@au.edu',
-        activeFrom: '2026-09-12T12:00:00Z',
-        activeTo: '2026-09-12T13:30:00Z'
-      },
-      'Martin de Tours Hall (MSME)': {
-        bookingId: 'bk_msme_3309',
-        room: 'Martin de Tours Hall (MSME)',
-        bookerName: 'Kritin Srisawat',
-        bookerEmail: 'student.kritin@au.edu',
-        activeFrom: '2026-09-12T08:30:00Z',
-        activeTo: '2026-09-12T10:30:00Z'
-      },
-      'Cathedral of Learning (CL Building)': {
-        bookingId: 'bk_cl_99218',
-        room: 'CL Lounge 2nd Floor',
-        bookerName: 'Thanakrit Kodklangdon',
-        bookerEmail: 'student.thanakrit@au.edu',
-        activeFrom: '2026-08-13T20:00:00Z',
-        activeTo: '2026-08-13T22:00:00Z'
-      },
-      'Room 402 (Engineering Building)': {
-        bookingId: 'bk_eng_33104',
-        room: 'Room 402 Lab',
-        bookerName: 'Kitirat Pisithaporn',
-        bookerEmail: 'student.kitirat@au.edu',
-        activeFrom: '2026-08-12T13:00:00Z',
-        activeTo: '2026-08-12T16:00:00Z'
-      },
-      'Library Room 4B / Study Pod': {
-        bookingId: 'bk_lib_12048',
-        room: 'Library Study Pod B',
-        bookerName: 'Somchai Prasert',
-        bookerEmail: 'student.somchai@au.edu',
-        activeFrom: '2026-08-13T14:00:00Z',
-        activeTo: '2026-08-13T16:00:00Z'
-      }
-    };
-
-    const simulatedBooking = mockBookings[location];
-
-    if (simulatedBooking) {
-      return res.json({
-        source: 'SpaceReserve API (Simulation Fallback)',
-        active: true,
-        booking: simulatedBooking
-      });
-    }
-
     return res.json({
-      source: 'SpaceReserve API (Simulation Fallback)',
+      source: 'Live SpaceReserve API',
       active: false,
       booking: null,
-      message: 'Unreserved Public Room / No Active SpaceReserve Booking'
+      message: `SpaceReserve responded with status ${response.status}`
+    });
+  } catch (err: any) {
+    console.warn(`[Peer API Warning] Direct connection to SpaceReserve failed: ${err.message}.`);
+    
+    // Strictly use live SpaceReserve API data. Return active: false when API is unreachable or has no booking.
+    return res.json({
+      source: 'SpaceReserve API',
+      active: false,
+      booking: null,
+      message: `SpaceReserve API query error: ${err.message}`
     });
   }
 }
