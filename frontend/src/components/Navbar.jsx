@@ -70,7 +70,7 @@ export default function Navbar({
       {/* ฝั่งขวา */}
       <div className="topbar-actions">
         <button
-          className="btn btn-gold btn-sm topbar-report-btn"
+          className="btn btn-sm topbar-report-btn topbar-btn-found"
           onClick={() => onOpenReportModal('FOUND')}
         >
           <PlusCircle size={14} />
@@ -78,7 +78,7 @@ export default function Navbar({
         </button>
 
         <button
-          className="btn btn-danger btn-sm topbar-report-btn"
+          className="btn btn-sm topbar-report-btn topbar-btn-lost"
           onClick={() => onOpenReportModal('LOST')}
         >
           <AlertCircle size={14} />

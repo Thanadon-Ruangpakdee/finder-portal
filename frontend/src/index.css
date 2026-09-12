@@ -4322,4 +4322,46 @@ h1, h2, h3, h4 {
   border-color: rgba(225, 29, 72, 0.5) !important;
 }
 
+/* Topbar Action Buttons (Crimson & Soft Crimson Theme) */
+.topbar-btn-found {
+  background: linear-gradient(145deg, #E11D48 0%, #BE123C 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35) !important;
+}
+
+.topbar-btn-found:hover {
+  background: linear-gradient(145deg, #BE123C 0%, #991B1B 100%) !important;
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.5) !important;
+  transform: translateY(-1px);
+}
+
+.topbar-btn-lost {
+  background: rgba(225, 29, 72, 0.08) !important;
+  border: 1px solid rgba(225, 29, 72, 0.35) !important;
+  color: #BE123C !important;
+  font-weight: 700 !important;
+}
+
+.topbar-btn-lost:hover {
+  background: rgba(225, 29, 72, 0.16) !important;
+  border-color: #E11D48 !important;
+  color: #991B1B !important;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .topbar-btn-lost {
+  background: rgba(225, 29, 72, 0.15) !important;
+  border: 1px solid rgba(225, 29, 72, 0.45) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .topbar-btn-lost:hover {
+  background: rgba(225, 29, 72, 0.3) !important;
+  border-color: #F43F5E !important;
+  color: #ffffff !important;
+}
+
+
 
