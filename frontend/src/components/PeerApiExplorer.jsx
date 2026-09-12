@@ -160,11 +160,6 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
 
             <div className="input-group">
               <label className="input-label">{t('Enter Room Name to Inquire *')}</label>
-              <div className="quick-room-presets">
-                <button type="button" className="btn-room-chip" onClick={() => setSelectedRoom('CL-2-04')}>CL-2-04</button>
-                <button type="button" className="btn-room-chip" onClick={() => setSelectedRoom('CA Edit Suite 2')}>CA Edit Suite 2</button>
-                <button type="button" className="btn-room-chip" onClick={() => setSelectedRoom('CL-2-05')}>CL-2-05</button>
-              </div>
               <input 
                 type="text"
                 className="input-field"
@@ -275,11 +270,6 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
 
             <div className="input-group">
               <label className="input-label">{t('Query Room Parameter (?location=) *')}</label>
-              <div className="quick-room-presets">
-                <button type="button" className="btn-room-chip" onClick={() => setIncomingLocationQuery('CL-2-04')}>CL-2-04</button>
-                <button type="button" className="btn-room-chip" onClick={() => setIncomingLocationQuery('CA Edit Suite 2')}>CA Edit Suite 2</button>
-                <button type="button" className="btn-room-chip" onClick={() => setIncomingLocationQuery('CL-2-05')}>CL-2-05</button>
-              </div>
               <input 
                 type="text"
                 className="input-field"

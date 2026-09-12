@@ -276,12 +276,6 @@ export default function ReportModal({
             {/* Room Number / Specific Area Input Box */}
             <div className="input-group">
               <label className="input-label">{t('Room Number / Specific Area')}</label>
-              <div className="quick-room-presets">
-                <span className="text-xs text-muted font-semibold mr-1">Quick SpaceReserve Rooms:</span>
-                <button type="button" className="btn-room-chip" onClick={() => { setBuilding('CL-2-04'); setRoomNumber('CL-2-04'); }}>CL-2-04</button>
-                <button type="button" className="btn-room-chip" onClick={() => { setBuilding('CA Edit Suite 2'); setRoomNumber('CA Edit Suite 2'); }}>CA Edit Suite 2</button>
-                <button type="button" className="btn-room-chip" onClick={() => { setBuilding('CL-2-05'); setRoomNumber('CL-2-05'); }}>CL-2-05</button>
-              </div>
               <input
                 type="text"
                 className="input-field"
