@@ -25,7 +25,7 @@ const config: Partial<AppConfig> = {
   JWT_SECRET: process.env.JWT_SECRET,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   MY_PEER_API_KEY: process.env.MY_PEER_API_KEY || 'fp_peer_api_key_xyz_998877',
-  THEIR_PEER_API_KEY: process.env.THEIR_PEER_API_KEY || '6a64c01f1380eb89ca382565562b0d4216cb1ab1afc6aa24606bf3ef771ae9b3',
+  THEIR_PEER_API_KEY: process.env.THEIR_PEER_API_KEY || '10a92f973b4d7b9ba5c0ecbc8f812e62ac22520b0ca8b6a6beeb157cfd0a81e9',
   SPACE_RESERVE_API_URL: process.env.SPACE_RESERVE_API_URL || 'https://spacereserve.malaysiawest.cloudapp.azure.com/spacereserve/api/v1',
   AZURE_TENANT_ID: process.env.AZURE_TENANT_ID || 'c1f3dc23-b7f8-48d3-9b5d-2b12f158f01f',
   AZURE_CLIENT_ID: process.env.AZURE_CLIENT_ID || '00fbc6b2-fea9-4779-ae5c-ae9c8aa606a8',

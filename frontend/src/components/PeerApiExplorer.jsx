@@ -184,7 +184,7 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
                 <Key size={14} />
                 <span>{t('SpaceReserve Authentication Header:')}</span>
               </div>
-              <code>x-api-key: 6a64c01f1380eb89ca382565562b0d4216cb1afc6aa24606bf3ef771ae9b3</code>
+              <code>x-api-key: 10a92f973b4d7b9ba5c0ecbc8f812e62ac22520b0ca8b6a6beeb157cfd0a81e9</code>
             </div>
 
             <button 
