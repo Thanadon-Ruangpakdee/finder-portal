@@ -264,7 +264,7 @@ export default function ItemDetailModal({
           )}
 
           {/* SpaceReserve Peer API Quick Lookup */}
-          <div className="spacereserve-discovery-box glass-card">
+          <div className="spacereserve-discovery-box glass-card" style={{ marginBottom: peerBookingData ? '12px' : '20px' }}>
             <div className="spacereserve-box-left">
               <Building2 size={20} className="text-cyan" />
               <div>
@@ -289,7 +289,7 @@ export default function ItemDetailModal({
             <div 
               className="spacereserve-live-result-card glass-card"
               style={{
-                marginTop: '12px',
+                marginBottom: '20px',
                 padding: '14px 16px',
                 borderRadius: '12px',
                 background: (peerBookingData.active !== false && peerBookingData.booking)
