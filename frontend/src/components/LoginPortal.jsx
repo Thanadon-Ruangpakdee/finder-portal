@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { api } from '../services/api';
 import { useT } from '../language';
-import { ShieldCheck } from './Icons';
+import { ShieldCheck, FinderPortalLogo } from './Icons';
 
 export default function LoginPortal({ onLoginSuccess }) {
   const t = useT();
@@ -72,7 +72,7 @@ export default function LoginPortal({ onLoginSuccess }) {
             <h2 className="hero-welcome-title">{t('welcome to!')}</h2>
 
             <div className="brand-logo-circle">
-              <ShieldCheck size={42} className="brand-icon-crimson" />
+              <FinderPortalLogo size={46} color="#E11D48" />
             </div>
 
             <h1 className="brand-app-title">Finder Portal</h1>
@@ -147,7 +147,7 @@ export default function LoginPortal({ onLoginSuccess }) {
             {/* Specific user sign in details */}
             <details className="dev-user-accordion">
               <summary className="dev-accordion-summary">
-                ▼ {t('Or sign in as a specific user')}
+                {t('Or sign in as a specific user')}
               </summary>
 
               <form onSubmit={handleDevSubmit} className="dev-accordion-form">

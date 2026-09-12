@@ -2583,7 +2583,7 @@ h1, h2, h3, h4 {
   width: 44%;
   position: relative;
   background: linear-gradient(145deg, #E11D48 0%, #BE123C 55%, #991B1B 100%);
-  color: #ffffff;
+  color: #ffffff !important;
   padding: 48px 36px;
   display: flex;
   flex-direction: column;
@@ -2591,6 +2591,14 @@ h1, h2, h3, h4 {
   justify-content: center;
   text-align: center;
   overflow: hidden;
+}
+
+.login-hero-side,
+.hero-welcome-sub,
+.hero-welcome-title,
+.brand-app-title,
+.brand-app-sub {
+  color: #ffffff !important;
 }
 
 .login-hero-ribbon {

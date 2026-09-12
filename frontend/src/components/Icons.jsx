@@ -353,3 +353,13 @@ export const Flame = createSvgIcon(
   <path d="M8.5 14.5A2.5 2.5 0 0 0 11 17c1.38 0 2.5-1.12 2.5-2.5 0-.61-.23-1.18-.62-1.61L12 12l-.88.89c-.39.43-.62 1-.62 1.61zM12 2C6.5 7.5 4 11.5 4 15a8 8 0 0 0 16 0c0-3.5-2.5-7.5-8-13zm0 19a6 6 0 0 1-6-6c0-2.8 2-6 6-10.5 4 4.5 6 7.7 6 10.5a6 6 0 0 1-6 6z" />
 );
 
+export const FinderPortalLogo = ({ size = 44, className = '', color = '#E11D48' }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M24 4C14.059 4 6 12.059 6 22c0 12.5 18 22 18 22s18-9.5 18-22C42 12.059 33.941 4 24 4z" fill={color} fillOpacity="0.15" />
+    <path d="M24 6C15.163 6 8 13.163 8 22c0 10.5 16 19 16 19s16-8.5 16-19c0-8.837-7.163-16-16-16z" stroke={color} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx="21" cy="19" r="6.5" stroke={color} strokeWidth="3" />
+    <path d="M26 24l5.5 5.5" stroke={color} strokeWidth="3.5" strokeLinecap="round" />
+    <path d="M19 19l1.5 1.5 3.5-3.5" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
