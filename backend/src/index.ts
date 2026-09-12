@@ -18,11 +18,15 @@ async function bootstrap() {
     app.use(express.json({ limit: '10mb' }));
     app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-    // 3. Mount REST API Routing
+    // 3. Mount REST API Routing (Supports /api/v1, /api, /project/api, and direct routes)
     app.use('/api/v1', apiRouter);
+    app.use('/api', apiRouter);
+    app.use('/v1', apiRouter);
+    app.use('/project/api/v1', apiRouter);
+    app.use('/project/api', apiRouter);
 
     // 4. Default Health Check
-    app.get('/', (req, res) => {
+    app.get(['/', '/health', '/api/health', '/project/api/health'], (req, res) => {
       res.json({
         name: 'Finder Portal REST API',
         status: 'healthy',

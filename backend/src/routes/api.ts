@@ -49,8 +49,9 @@ router.post('/matches/:id/review', authenticateToken, requireRole(['TEACHER', 'A
 // ==========================================
 // Bilateral Peer API Services (SpaceReserve)
 // ==========================================
-// Expose (Expects x-api-key header)
+// Expose (Expects x-api-key header) - Supports both plural (/items/by-location) and singular (/item/by-location)
 router.get('/items/by-location', getItemsByLocation);
+router.get('/item/by-location', getItemsByLocation);
 
 // Consume (Authenticated local proxy)
 router.post('/peer/check-bookings', authenticateToken, checkPeerBookings);
