@@ -101,6 +101,70 @@ export async function checkPeerBookings(req: Request, res: Response) {
     
     // Fallback simulation: Return realistic mock booking matching the location
     const mockBookings: { [key: string]: any } = {
+      'CL-2-04': {
+        bookingId: 'bk_cl204_9981',
+        room: 'CL-2-04',
+        bookerName: 'Supakorn Tangwong',
+        bookerEmail: 'student.supakorn@au.edu',
+        activeFrom: '2026-09-12T13:00:00Z',
+        activeTo: '2026-09-12T15:00:00Z'
+      },
+      'CL-2-05': {
+        bookingId: 'bk_cl205_9982',
+        room: 'CL-2-05',
+        bookerName: 'Natcha Srivirat',
+        bookerEmail: 'student.natcha@au.edu',
+        activeFrom: '2026-09-12T14:00:00Z',
+        activeTo: '2026-09-12T16:00:00Z'
+      },
+      'CA Edit Suite 2': {
+        bookingId: 'bk_ca2_8812',
+        room: 'CA Edit Suite 2',
+        bookerName: 'Thanadon Ruangpakdee',
+        bookerEmail: 'student.thanadon@au.edu',
+        activeFrom: '2026-09-12T10:00:00Z',
+        activeTo: '2026-09-12T12:00:00Z'
+      },
+      'CA Edit Suite 3': {
+        bookingId: 'bk_ca3_8813',
+        room: 'CA Edit Suite 3',
+        bookerName: 'Phattarapol Wongchai',
+        bookerEmail: 'student.phattarapol@au.edu',
+        activeFrom: '2026-09-12T11:00:00Z',
+        activeTo: '2026-09-12T13:00:00Z'
+      },
+      'CA Studio 1': {
+        bookingId: 'bk_cas1_7714',
+        room: 'CA Studio 1',
+        bookerName: 'Chanya Phasuk',
+        bookerEmail: 'student.chanya@au.edu',
+        activeFrom: '2026-09-12T09:00:00Z',
+        activeTo: '2026-09-12T11:00:00Z'
+      },
+      'CA Screening Room': {
+        bookingId: 'bk_casr_7715',
+        room: 'CA Screening Room',
+        bookerName: 'Kittisak Panyawong',
+        bookerEmail: 'student.kittisak@au.edu',
+        activeFrom: '2026-09-12T15:00:00Z',
+        activeTo: '2026-09-12T17:00:00Z'
+      },
+      'Campus Cafeteria (AU Mall)': {
+        bookingId: 'bk_mall_4401',
+        room: 'Campus Cafeteria (AU Mall)',
+        bookerName: 'Pichaya Boonma',
+        bookerEmail: 'student.pichaya@au.edu',
+        activeFrom: '2026-09-12T12:00:00Z',
+        activeTo: '2026-09-12T13:30:00Z'
+      },
+      'Martin de Tours Hall (MSME)': {
+        bookingId: 'bk_msme_3309',
+        room: 'Martin de Tours Hall (MSME)',
+        bookerName: 'Kritin Srisawat',
+        bookerEmail: 'student.kritin@au.edu',
+        activeFrom: '2026-09-12T08:30:00Z',
+        activeTo: '2026-09-12T10:30:00Z'
+      },
       'Cathedral of Learning (CL Building)': {
         bookingId: 'bk_cl_99218',
         room: 'CL Lounge 2nd Floor',
@@ -128,10 +192,10 @@ export async function checkPeerBookings(req: Request, res: Response) {
     };
 
     const simulatedBooking = mockBookings[location] || {
-      bookingId: 'bk_gen_55012',
+      bookingId: `bk_${Date.now().toString().slice(-5)}`,
       room: location,
-      bookerName: 'Guest Student',
-      bookerEmail: 'student.guest@au.edu',
+      bookerName: 'AU Student Booker',
+      bookerEmail: 'student.au@au.edu',
       activeFrom: timestamp,
       activeTo: timestamp
     };
