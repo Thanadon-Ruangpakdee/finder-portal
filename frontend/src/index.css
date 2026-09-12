@@ -4230,3 +4230,77 @@ h1, h2, h3, h4 {
   transform: translateY(-1px);
 }
 
+/* Stat Card Icon High Contrast in Crimson Hero Banner */
+.stat-card-crimson .stat-icon-wrapper {
+  background: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22) !important;
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.stat-card-crimson .stat-icon-blue { color: #E11D48 !important; }
+.stat-card-crimson .stat-icon-rose { color: #E11D48 !important; }
+.stat-card-crimson .stat-icon-emerald { color: #10b981 !important; }
+.stat-card-crimson .stat-icon-purple { color: #8b5cf6 !important; }
+
+.stat-card-crimson.active .stat-icon-wrapper {
+  background: #BE123C !important;
+}
+
+.stat-card-crimson.active .stat-icon-wrapper svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* AI Matcher High-Contrast Badges & Matching Tokens */
+.ai-matcher-badge {
+  background: rgba(225, 29, 72, 0.1) !important;
+  color: #BE123C !important;
+  border: 1px solid rgba(225, 29, 72, 0.25) !important;
+  font-weight: 800 !important;
+}
+
+.match-score-badge {
+  background: #fff7ed !important;
+  border: 1px solid #fdba74 !important;
+  color: #c2410c !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="dark"] .match-score-badge {
+  background: rgba(245, 158, 11, 0.2) !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  color: #fbbf24 !important;
+}
+
+.common-attributes-box {
+  background: rgba(225, 29, 72, 0.06) !important;
+  border: 1px solid rgba(225, 29, 72, 0.18) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 8px 14px !important;
+}
+
+.common-attributes-box .text-muted {
+  color: var(--text-primary) !important;
+  font-weight: 700 !important;
+}
+
+.match-token-pill {
+  font-size: 0.76rem !important;
+  padding: 4px 10px !important;
+  border-radius: var(--radius-full) !important;
+  background: #ffffff !important;
+  color: #BE123C !important;
+  font-weight: 800 !important;
+  border: 1px solid rgba(225, 29, 72, 0.25) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="dark"] .match-token-pill {
+  background: rgba(225, 29, 72, 0.3) !important;
+  color: #ffffff !important;
+  border-color: rgba(225, 29, 72, 0.5) !important;
+}
+
+
