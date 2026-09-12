@@ -1,4 +1,36 @@
 import nodemailer, { Transporter } from 'nodemailer';
+import { EmailClient } from '@azure/communication-email';
+
+// Helper to send email via Azure Communication Services if configured
+async function sendViaACS(to: string, subject: string, html: string): Promise<boolean> {
+  const connectionString = process.env.ACS_CONNECTION_STRING;
+  const senderAddress = process.env.ACS_SENDER_ADDRESS;
+
+  if (connectionString && senderAddress) {
+    try {
+      console.log(`[Email Service] Sending live email via Azure Communication Services to ${to}...`);
+      const client = new EmailClient(connectionString);
+      const poller = await client.beginSend({
+        senderAddress,
+        content: {
+          subject,
+          html,
+          plainText: html.replace(/<[^>]+>/g, '').trim()
+        },
+        recipients: {
+          to: [{ address: to }]
+        }
+      });
+
+      const result = await poller.pollUntilDone();
+      console.log(`[Email Service] ACS Email delivered successfully! Status: ${result.status} (Message ID: ${result.id})`);
+      return true;
+    } catch (err: any) {
+      console.error(`[Email Service Error] ACS Email failed: ${err.message}. Falling back to SMTP/Ethereal transport...`);
+    }
+  }
+  return false;
+}
 
 // Helper to create transport lazily
 let transporterPromise: Promise<Transporter> | null = null;
@@ -60,8 +92,7 @@ export async function sendClaimApprovalEmail(
   if (!recipientEmail) return;
 
   try {
-    const transporter = await getTransporter();
-
+    const subject = `[Finder Portal] คำร้องขอรับคืน "${itemTitle}" ได้รับการอนุมัติแล้ว!`;
     const htmlContent = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; color: #f8fafc;">
         <!-- Header -->
@@ -106,10 +137,16 @@ export async function sendClaimApprovalEmail(
       </div>
     `;
 
+    // 1. Try sending via Azure Communication Services
+    const sentViaACS = await sendViaACS(recipientEmail, subject, htmlContent);
+    if (sentViaACS) return;
+
+    // 2. Fallback to Nodemailer (SMTP / Ethereal)
+    const transporter = await getTransporter();
     const info = await transporter.sendMail({
       from: EMAIL_FROM,
       to: recipientEmail,
-      subject: `[Finder Portal] คำร้องขอรับคืน "${itemTitle}" ได้รับการอนุมัติแล้ว!`,
+      subject,
       html: htmlContent
     });
 
@@ -135,8 +172,7 @@ export async function sendClaimRejectionEmail(
   if (!recipientEmail) return;
 
   try {
-    const transporter = await getTransporter();
-
+    const subject = `[Finder Portal] อัปเดตคำร้องขอรับคืน "${itemTitle}"`;
     const htmlContent = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; color: #f8fafc;">
         <div style="background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%); padding: 28px 24px; text-align: center;">
@@ -175,10 +211,16 @@ export async function sendClaimRejectionEmail(
       </div>
     `;
 
+    // 1. Try sending via Azure Communication Services
+    const sentViaACS = await sendViaACS(recipientEmail, subject, htmlContent);
+    if (sentViaACS) return;
+
+    // 2. Fallback to Nodemailer
+    const transporter = await getTransporter();
     const info = await transporter.sendMail({
       from: EMAIL_FROM,
       to: recipientEmail,
-      subject: `[Finder Portal] อัปเดตคำร้องขอรับคืน "${itemTitle}"`,
+      subject,
       html: htmlContent
     });
 
@@ -201,8 +243,7 @@ export async function sendMatchNotificationEmail(
   if (!recipientEmail) return;
 
   try {
-    const transporter = await getTransporter();
-
+    const subject = `[Finder Portal] Gemini AI พบคู่ของหายที่ตรงกับ "${lostItemTitle}"!`;
     const htmlContent = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; color: #f8fafc;">
         <div style="background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%); padding: 28px 24px; text-align: center;">
@@ -240,10 +281,16 @@ export async function sendMatchNotificationEmail(
       </div>
     `;
 
+    // 1. Try sending via Azure Communication Services
+    const sentViaACS = await sendViaACS(recipientEmail, subject, htmlContent);
+    if (sentViaACS) return;
+
+    // 2. Fallback to Nodemailer
+    const transporter = await getTransporter();
     const info = await transporter.sendMail({
       from: EMAIL_FROM,
       to: recipientEmail,
-      subject: `[Finder Portal] Gemini AI พบคู่ของหายที่ตรงกับ "${lostItemTitle}"!`,
+      subject,
       html: htmlContent
     });
 
@@ -267,8 +314,7 @@ export async function sendClaimSubmittedNotificationToReporter(
   if (!reporterEmail) return;
 
   try {
-    const transporter = await getTransporter();
-
+    const subject = `[Finder Portal] มีผู้ส่งคำร้องขอรับคืน "${itemTitle}"`;
     const htmlContent = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; color: #f8fafc;">
         <!-- Header -->
@@ -313,10 +359,16 @@ export async function sendClaimSubmittedNotificationToReporter(
       </div>
     `;
 
+    // 1. Try sending via Azure Communication Services
+    const sentViaACS = await sendViaACS(reporterEmail, subject, htmlContent);
+    if (sentViaACS) return;
+
+    // 2. Fallback to Nodemailer
+    const transporter = await getTransporter();
     const info = await transporter.sendMail({
       from: EMAIL_FROM,
       to: reporterEmail,
-      subject: `[Finder Portal] มีผู้ส่งคำร้องขอรับคืน "${itemTitle}"`,
+      subject,
       html: htmlContent
     });
 

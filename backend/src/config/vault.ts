@@ -17,6 +17,8 @@ export interface AppConfig {
   AZURE_CLIENT_ID: string;
   AZURE_CLIENT_SECRET: string;
   AZURE_REDIRECT_URI: string;
+  ACS_CONNECTION_STRING?: string;
+  ACS_SENDER_ADDRESS?: string;
 }
 
 const config: Partial<AppConfig> = {
@@ -30,7 +32,9 @@ const config: Partial<AppConfig> = {
   AZURE_TENANT_ID: process.env.AZURE_TENANT_ID || 'c1f3dc23-b7f8-48d3-9b5d-2b12f158f01f',
   AZURE_CLIENT_ID: process.env.AZURE_CLIENT_ID || '00fbc6b2-fea9-4779-ae5c-ae9c8aa606a8',
   AZURE_CLIENT_SECRET: process.env.AZURE_CLIENT_SECRET || '',
-  AZURE_REDIRECT_URI: process.env.AZURE_REDIRECT_URI || 'https://thanadon-bad2026.koreacentral.cloudapp.azure.com/project/api/v1/auth/callback'
+  AZURE_REDIRECT_URI: process.env.AZURE_REDIRECT_URI || 'https://thanadon-bad2026.koreacentral.cloudapp.azure.com/project/api/v1/auth/callback',
+  ACS_CONNECTION_STRING: process.env.ACS_CONNECTION_STRING,
+  ACS_SENDER_ADDRESS: process.env.ACS_SENDER_ADDRESS
 };
 
 export async function initConfig(): Promise<AppConfig> {
@@ -55,6 +59,18 @@ export async function initConfig(): Promise<AppConfig> {
 
       const geminiSecret = await client.getSecret('GEMINI-API-KEY').catch(() => null);
       if (geminiSecret?.value) config.GEMINI_API_KEY = geminiSecret.value;
+
+      const acsConnSecret = await client.getSecret('ACS-CONNECTION-STRING').catch(() => null);
+      if (acsConnSecret?.value) {
+        config.ACS_CONNECTION_STRING = acsConnSecret.value;
+        process.env.ACS_CONNECTION_STRING = acsConnSecret.value;
+      }
+
+      const acsSenderSecret = await client.getSecret('ACS-SENDER-ADDRESS').catch(() => null);
+      if (acsSenderSecret?.value) {
+        config.ACS_SENDER_ADDRESS = acsSenderSecret.value;
+        process.env.ACS_SENDER_ADDRESS = acsSenderSecret.value;
+      }
 
       console.log('[Vault] Central secrets loaded successfully from Azure Key Vault!');
     } catch (err: any) {
