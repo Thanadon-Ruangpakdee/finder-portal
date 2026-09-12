@@ -488,8 +488,6 @@ export default function App() {
               setCurrentUser(updatedUser);
               showToast(`✓ ${t('Profile settings updated!')}`);
             }}
-            theme={theme}
-            setTheme={setTheme}
             onSignOut={handleSignOut}
           />
         )}

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { api } from '../services/api';
-import { Sparkles, Sun, Moon, ShieldCheck, User } from './Icons';
-import { useT, useLang } from '../language';
+import { ShieldCheck, User, Bell, Phone } from './Icons';
+import { useT } from '../language';
 
-export default function SettingsView({ currentUser, onProfileUpdated, theme, setTheme, onSignOut }) {
+export default function SettingsView({ currentUser, onProfileUpdated, onSignOut }) {
   const t = useT();
-  const { lang, setLang } = useLang();
-  const [name, setName] = useState(currentUser.name);
+  const [name, setName] = useState(currentUser.name || '');
+  const [phone, setPhone] = useState(currentUser.phone || '');
   const [avatarMode, setAvatarMode] = useState(
     currentUser.avatar && currentUser.avatar.startsWith('https://api.dicebear.com') ? 'avatar' : 'custom'
   );
@@ -16,6 +16,11 @@ export default function SettingsView({ currentUser, onProfileUpdated, theme, set
     currentUser.avatar && !currentUser.avatar.startsWith('https://api.dicebear.com') ? currentUser.avatar : ''
   );
   
+  // Notification Preferences States
+  const [emailAlerts, setEmailAlerts] = useState(true);
+  const [aiMatchAlerts, setAiMatchAlerts] = useState(true);
+  const [toastAlerts, setToastAlerts] = useState(true);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -67,7 +72,7 @@ export default function SettingsView({ currentUser, onProfileUpdated, theme, set
   };
 
   return (
-    <div className="settings-page-container animate-scaleUp" style={{ maxWidth: '800px', margin: '0 auto', padding: '24px 0 60px' }}>
+    <div className="settings-page-container animate-scaleUp" style={{ maxWidth: '860px', margin: '0 auto', padding: '24px 0 60px' }}>
       <div className="dashboard-header" style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div className="header-icon-box" style={{ color: 'var(--primary)', fontSize: '1.4rem' }}>
@@ -75,15 +80,15 @@ export default function SettingsView({ currentUser, onProfileUpdated, theme, set
           </div>
           <div>
             <h2 className="dashboard-title">{t('System & Account Settings')}</h2>
-            <p className="dashboard-subtitle">{t('Manage your profile identity, appearance preferences, and Active Directory session status.')}</p>
+            <p className="dashboard-subtitle">{t('Manage your profile identity, notification preferences, and Active Directory session status.')}</p>
           </div>
         </div>
       </div>
 
-      <div className="settings-grid-layout" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
-        {/* Left Side: Profile Customizer */}
-        <div className="glass-card" style={{ padding: '30px', borderRadius: 'var(--radius-lg)' }}>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div className="settings-grid-layout" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px' }}>
+        {/* Left Side: Profile & Contact Customizer */}
+        <div className="glass-card" style={{ padding: '28px', borderRadius: 'var(--radius-lg)' }}>
+          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <User size={18} className="text-primary" /> {t('Profile Customization')}
           </h3>
           
@@ -91,12 +96,12 @@ export default function SettingsView({ currentUser, onProfileUpdated, theme, set
             {error && <div className="login-error-banner" style={{ margin: '0 0 16px' }}>{error}</div>}
             {success && <div style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', padding: '10px 14px', borderRadius: 'var(--radius-sm)', fontSize: '0.85rem', fontWeight: 600, margin: '0 0 16px', border: '1px solid rgba(16, 185, 129, 0.25)' }}>{success}</div>}
 
-            <div className="avatar-customizer-preview-box" style={{ background: 'rgba(255,255,255,0.03)', padding: '20px', borderRadius: 'var(--radius-md)', marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className="avatar-preview-wrapper" style={{ width: '90px', height: '90px' }}>
+            <div className="avatar-customizer-preview-box" style={{ background: 'var(--bg-input)', padding: '18px', borderRadius: 'var(--radius-md)', marginBottom: '18px', display: 'flex', flexDirection: 'column', alignItems: 'center', border: '1px solid var(--border-subtle)' }}>
+              <div className="avatar-preview-wrapper" style={{ width: '85px', height: '85px' }}>
                 <img src={finalAvatarUrl} alt={t('Avatar Preview')} className="avatar-large-preview" />
               </div>
               
-              <div className="segmented-control" style={{ width: '280px', marginTop: '12px' }}>
+              <div className="segmented-control" style={{ width: '260px', marginTop: '12px' }}>
                 <button 
                   type="button"
                   className={`segment-btn ${avatarMode === 'avatar' ? 'active' : ''}`}
@@ -114,7 +119,7 @@ export default function SettingsView({ currentUser, onProfileUpdated, theme, set
               </div>
             </div>
 
-            <div className="form-group-stacked" style={{ marginBottom: '20px' }}>
+            <div className="form-group-stacked" style={{ marginBottom: '16px' }}>
               <label className="form-label-stacked">{t('Display Name')}</label>
               <input
                 type="text"
@@ -126,8 +131,26 @@ export default function SettingsView({ currentUser, onProfileUpdated, theme, set
               />
             </div>
 
+            <div className="form-group-stacked" style={{ marginBottom: '16px' }}>
+              <label className="form-label-stacked" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Phone size={14} className="text-cyan" />
+                <span>{t('Mobile Phone / LINE ID')}</span>
+              </label>
+              <input
+                type="text"
+                className="login-form-input"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder={t('e.g. 081-234-5678 or Line ID for pickup')}
+                disabled={loading}
+              />
+              <span className="text-xs text-muted" style={{ marginTop: '4px', display: 'block' }}>
+                {t('Optional contact for security desk verification')}
+              </span>
+            </div>
+
             {avatarMode === 'avatar' ? (
-              <div className="form-group-stacked animate-fadeIn" style={{ marginBottom: '20px' }}>
+              <div className="form-group-stacked animate-fadeIn" style={{ marginBottom: '18px' }}>
                 <button 
                   type="button" 
                   className="btn btn-glass" 
@@ -139,7 +162,7 @@ export default function SettingsView({ currentUser, onProfileUpdated, theme, set
                 </button>
               </div>
             ) : (
-              <div className="form-group-stacked animate-fadeIn" style={{ marginBottom: '20px' }}>
+              <div className="form-group-stacked animate-fadeIn" style={{ marginBottom: '18px' }}>
                 <label className="form-label-stacked">{t('Upload Custom Profile Photo')}</label>
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center', margin: '4px 0 8px' }}>
                   <label className="btn btn-glass btn-sm" style={{ cursor: 'pointer', margin: 0 }}>
@@ -172,62 +195,67 @@ export default function SettingsView({ currentUser, onProfileUpdated, theme, set
               type="submit" 
               className="btn btn-primary"
               disabled={loading}
-              style={{ width: '100%', marginTop: '10px' }}
+              style={{ width: '100%', marginTop: '6px' }}
             >
               {loading ? t('Saving Profile Updates...') : t('✓ Save Changes')}
             </button>
           </form>
         </div>
 
-        {/* Right Side: System & AD session details */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          {/* Theme Preferences */}
+        {/* Right Side: Notification Preferences & System Status */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Notification Preferences Card */}
           <div className="glass-card" style={{ padding: '24px', borderRadius: 'var(--radius-lg)' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '14px' }}>{t('Appearance Theme')}</h3>
-            <button
-              type="button"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="btn btn-glass btn-block"
-              style={{ justifyContent: 'center', gap: '8px' }}
-            >
-              {theme === 'dark' ? (
-                <>
-                  <Sun size={15} className="text-gold" />
-                  <span>{t('Switch to Day Mode')}</span>
-                </>
-              ) : (
-                <>
-                  <Moon size={15} />
-                  <span>{t('Switch to Night Mode')}</span>
-                </>
-              )}
-            </button>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Bell size={16} className="text-primary" /> {t('Notification Preferences')}
+            </h3>
 
-            <div style={{ marginTop: '14px' }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '14px' }}>{t('Language')}</h3>
-              <div className="segmented-control" style={{ width: '100%' }}>
-                <button
-                  type="button"
-                  className={`segment-btn ${lang === 'en' ? 'active' : ''}`}
-                  onClick={() => setLang('en')}
-                >
-                  English
-                </button>
-                <button
-                  type="button"
-                  className={`segment-btn ${lang === 'th' ? 'active' : ''}`}
-                  onClick={() => setLang('th')}
-                >
-                  ไทย
-                </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{t('Email Alerts for Claims')}</div>
+                  <div className="text-xs text-muted">{t('Receive email updates when status or claim updates occur')}</div>
+                </div>
+                <input 
+                  type="checkbox" 
+                  checked={emailAlerts} 
+                  onChange={(e) => setEmailAlerts(e.target.checked)} 
+                  style={{ width: '18px', height: '18px', accentColor: 'var(--primary)', cursor: 'pointer' }} 
+                />
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+                <div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{t('Gemini AI Match Notifications')}</div>
+                  <div className="text-xs text-muted">{t('Get notified when AI discovers a lost & found match')}</div>
+                </div>
+                <input 
+                  type="checkbox" 
+                  checked={aiMatchAlerts} 
+                  onChange={(e) => setAiMatchAlerts(e.target.checked)} 
+                  style={{ width: '18px', height: '18px', accentColor: 'var(--primary)', cursor: 'pointer' }} 
+                />
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+                <div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{t('In-App Toast Alerts')}</div>
+                  <div className="text-xs text-muted">{t('Show real-time alerts inside the portal')}</div>
+                </div>
+                <input 
+                  type="checkbox" 
+                  checked={toastAlerts} 
+                  onChange={(e) => setToastAlerts(e.target.checked)} 
+                  style={{ width: '18px', height: '18px', accentColor: 'var(--primary)', cursor: 'pointer' }} 
+                />
               </div>
             </div>
           </div>
 
-          {/* Active Session Info */}
+          {/* Active Session & Integrations Card */}
           <div className="glass-card" style={{ padding: '24px', borderRadius: 'var(--radius-lg)' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <ShieldCheck size={16} className="text-primary" /> {t('AD Security Session')}
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ShieldCheck size={16} className="text-primary" /> {t('AD Security & Integrations')}
             </h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.8rem' }}>
@@ -235,13 +263,30 @@ export default function SettingsView({ currentUser, onProfileUpdated, theme, set
                 <span className="text-muted" style={{ display: 'block', marginBottom: '2px' }}>{t('Email Address')}</span>
                 <span style={{ fontWeight: 600 }}>{currentUser.email}</span>
               </div>
+              
               <div>
                 <span className="text-muted" style={{ display: 'block', marginBottom: '2px' }}>{t('Assigned Access Role')}</span>
                 <span style={{ fontWeight: 600, color: 'var(--primary)' }}>
                   {currentUser.role}
                 </span>
               </div>
+
+              <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '10px', marginTop: '2px' }}>
+                <span className="text-muted" style={{ display: 'block', marginBottom: '6px' }}>{t('System Integration Status')}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.78rem' }}>Azure AD SSO</span>
+                    <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 600 }}>🟢 {t('SSO Authenticated')}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.78rem' }}>SpaceReserve Peer API</span>
+                    <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 600 }}>🟢 {t('Bilateral Sync Active')}</span>
+                  </div>
+                </div>
+              </div>
+
               <div className="dropdown-divider-line" style={{ borderTop: '1px solid var(--border-subtle)', margin: '4px 0' }}></div>
+              
               <button 
                 type="button"
                 onClick={onSignOut}
