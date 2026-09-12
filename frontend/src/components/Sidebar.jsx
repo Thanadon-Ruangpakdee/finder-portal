@@ -26,6 +26,12 @@ const CATEGORY_DOT_COLORS = {
 
 const LOCATIONS = [
   'All Locations',
+  'CL-2-04',
+  'CL-2-05',
+  'CA Edit Suite 2',
+  'CA Edit Suite 3',
+  'CA Studio 1',
+  'CA Screening Room',
   'Cathedral of Learning (CL Building)',
   'John Paul II Sports Center',
   'Room 402 (Engineering Building)',

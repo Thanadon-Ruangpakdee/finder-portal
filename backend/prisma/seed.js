@@ -148,7 +148,49 @@ async function main() {
     }
   });
 
-  console.log(`[Seed] Seeded 7 items.`);
+  const item8 = await prisma.item.create({
+    data: {
+      title: 'iPad Pro 11" with Apple Pencil',
+      description: 'Found an iPad Pro 11-inch with Apple Pencil attached on the front row desk in CL-2-04 classroom. Has a dark blue magnetic cover.',
+      category: 'Electronics',
+      type: 'FOUND',
+      status: 'OPEN',
+      location: 'CL-2-04',
+      imagePreset: 'MacBook',
+      aiTags: 'ipad,tablet,apple,pencil,cl204',
+      reporterId: staff.id
+    }
+  });
+
+  const item9 = await prisma.item.create({
+    data: {
+      title: 'Sony Mirrorless Camera Lens Cap (67mm)',
+      description: 'Found a 67mm Sony lens cap sitting on the video editing console table in CA Edit Suite 2.',
+      category: 'Electronics',
+      type: 'FOUND',
+      status: 'OPEN',
+      location: 'CA Edit Suite 2',
+      imagePreset: 'Headphones',
+      aiTags: 'sony,camera,lens,cap,commarts',
+      reporterId: staff.id
+    }
+  });
+
+  const item10 = await prisma.item.create({
+    data: {
+      title: 'AirPods Pro (2nd Gen) in Clear Case',
+      description: 'Found AirPods Pro 2 in a transparent protective case on the student desk near whiteboard in CL-2-05.',
+      category: 'Electronics',
+      type: 'FOUND',
+      status: 'OPEN',
+      location: 'CL-2-05',
+      imagePreset: 'Headphones',
+      aiTags: 'airpods,apple,headphones,cl205',
+      reporterId: staff.id
+    }
+  });
+
+  console.log(`[Seed] Seeded 10 items including SpaceReserve rooms (CL-2-04, CA Edit Suite 2, CL-2-05).`);
 
   // 4. Seed Claims
   await prisma.claim.create({

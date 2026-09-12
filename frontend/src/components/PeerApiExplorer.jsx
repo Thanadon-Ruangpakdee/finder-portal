@@ -160,12 +160,17 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
 
             <div className="input-group">
               <label className="input-label">{t('Enter Room Name to Inquire *')}</label>
+              <div className="quick-room-presets">
+                <button type="button" className="btn-room-chip" onClick={() => setSelectedRoom('CL-2-04')}>CL-2-04</button>
+                <button type="button" className="btn-room-chip" onClick={() => setSelectedRoom('CA Edit Suite 2')}>CA Edit Suite 2</button>
+                <button type="button" className="btn-room-chip" onClick={() => setSelectedRoom('CL-2-05')}>CL-2-05</button>
+              </div>
               <input 
                 type="text"
                 className="input-field"
                 value={selectedRoom}
                 onChange={(e) => setSelectedRoom(e.target.value)}
-                placeholder={t('e.g. Room 402 (Engineering Building), CL Lounge 2nd Floor')}
+                placeholder={t('e.g. CL-2-04, CA Edit Suite 2')}
               />
             </div>
 
@@ -270,12 +275,17 @@ export default function PeerApiExplorer({ items, initialLocation = '' }) {
 
             <div className="input-group">
               <label className="input-label">{t('Query Room Parameter (?location=) *')}</label>
+              <div className="quick-room-presets">
+                <button type="button" className="btn-room-chip" onClick={() => setIncomingLocationQuery('CL-2-04')}>CL-2-04</button>
+                <button type="button" className="btn-room-chip" onClick={() => setIncomingLocationQuery('CA Edit Suite 2')}>CA Edit Suite 2</button>
+                <button type="button" className="btn-room-chip" onClick={() => setIncomingLocationQuery('CL-2-05')}>CL-2-05</button>
+              </div>
               <input 
                 type="text"
                 className="input-field"
                 value={incomingLocationQuery}
                 onChange={(e) => setIncomingLocationQuery(e.target.value)}
-                placeholder={t('e.g. Room 402 or Central Library')}
+                placeholder={t('e.g. CL-2-04, CA Edit Suite 2')}
               />
             </div>
 

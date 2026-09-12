@@ -4363,5 +4363,39 @@ h1, h2, h3, h4 {
   color: #ffffff !important;
 }
 
+/* Quick Room Chip Presets */
+.quick-room-presets {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-room-chip {
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(225, 29, 72, 0.08);
+  border: 1px solid rgba(225, 29, 72, 0.25);
+  color: #BE123C;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-room-chip:hover {
+  background: #E11D48;
+  color: #ffffff;
+  border-color: #E11D48;
+}
+
+[data-theme="dark"] .btn-room-chip {
+  background: rgba(225, 29, 72, 0.2);
+  color: #ffffff;
+  border-color: rgba(225, 29, 72, 0.4);
+}
+
+
 
 
