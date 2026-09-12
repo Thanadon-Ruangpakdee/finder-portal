@@ -279,6 +279,8 @@ const TH = {
   'Booker Name': 'ชื่อผู้จอง',
   'Booker Email': 'อีเมลผู้จอง',
   'Active Period': 'ช่วงเวลาการจอง',
+  'No active SpaceReserve room booking at the time of discovery': 'ไม่พบรายชื่อผู้จองห้องพัก ณ เวลาที่พบของ',
+  'This area is a public location or unreserved in SpaceReserve — AI Matcher is recommended to pair visual and text descriptions to find the owner.': 'พื้นที่นี้เป็นพื้นที่สาธารณะหรือไม่มีการจองผ่าน SpaceReserve — แนะนำให้ใช้ระบบ AI Matcher ในการเปรียบเทียบภาพและคำอธิบายเพื่อค้นหาเจ้าของสิ่งของ',
 
   // ---------- ตั้งค่า / โปรไฟล์ ----------
   'System & Account Settings': 'ตั้งค่าระบบและบัญชีผู้ใช้',

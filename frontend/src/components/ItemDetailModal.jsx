@@ -336,10 +336,10 @@ export default function ItemDetailModal({
               ) : (
                 <div className="live-no-booking-info" style={{ padding: '2px 0' }}>
                   <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#60a5fa', marginBottom: '4px' }}>
-                    {t('ไม่พบรายชื่อผู้จองห้องพัก ณ เวลาที่พบของ')}
+                    {t('No active SpaceReserve room booking at the time of discovery')}
                   </div>
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.45' }}>
-                    {t('พื้นที่นี้เป็นพื้นที่สาธารณะหรือไม่มีการจองผ่าน SpaceReserve — แนะนำให้ใช้ระบบ AI Matcher ในการเปรียบเทียบภาพและคำอธิบายเพื่อค้นหาเจ้าของสิ่งของ')}
+                    {t('This area is a public location or unreserved in SpaceReserve — AI Matcher is recommended to pair visual and text descriptions to find the owner.')}
                   </div>
                 </div>
               )}
