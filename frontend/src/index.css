@@ -2563,6 +2563,331 @@ h1, h2, h3, h4 {
   z-index: 100;
 }
 
+.login-split-card {
+  display: flex;
+  width: 100%;
+  max-width: 920px;
+  min-height: 540px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  animation: modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Left Hero Banner Side (Crimson Theme) */
+.login-hero-side {
+  width: 44%;
+  position: relative;
+  background: linear-gradient(145deg, #E11D48 0%, #BE123C 55%, #991B1B 100%);
+  color: #ffffff;
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.login-hero-ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55px;
+  height: 55px;
+  background: #991B1B;
+  border-bottom-left-radius: 24px;
+  opacity: 0.7;
+}
+
+.login-hero-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-welcome-sub {
+  font-size: 1.15rem;
+  font-weight: 500;
+  opacity: 0.95;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.hero-welcome-title {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 2px 0 28px;
+  letter-spacing: -0.02em;
+}
+
+.brand-logo-circle {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+  margin-bottom: 22px;
+  transition: transform 0.3s ease;
+}
+
+.brand-logo-circle:hover {
+  transform: scale(1.06);
+}
+
+.brand-icon-crimson {
+  color: #E11D48;
+}
+
+.brand-app-title {
+  font-family: var(--font-heading);
+  font-size: 1.65rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+
+.brand-app-sub {
+  font-size: 0.82rem;
+  opacity: 0.88;
+  font-weight: 500;
+  margin: 0;
+  max-width: 220px;
+  line-height: 1.35;
+}
+
+/* Right Form Side */
+.login-form-side {
+  width: 56%;
+  padding: 48px 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.form-side-header {
+  margin-bottom: 24px;
+}
+
+.form-main-title {
+  font-family: var(--font-heading);
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #E11D48;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+[data-theme="light"] .form-main-title {
+  color: #BE123C;
+}
+
+.form-main-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.primary-auth-block {
+  margin-bottom: 22px;
+}
+
+.btn-microsoft-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 24px;
+  background-color: #E11D48;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.35);
+}
+
+.btn-microsoft-primary:hover {
+  background-color: #BE123C;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(225, 29, 72, 0.45);
+}
+
+.btn-microsoft-primary:active {
+  transform: translateY(0);
+}
+
+.ms-logo-svg {
+  flex-shrink: 0;
+}
+
+.login-divider-custom {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 18px 0 22px;
+  color: var(--text-muted);
+}
+
+.login-divider-custom::before,
+.login-divider-custom::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.login-divider-custom span {
+  padding: 0 12px;
+  font-size: 0.78rem;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+
+.dev-section-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.dev-label-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.dev-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.btn-dev-role {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-dev-role:hover {
+  border-color: #E11D48;
+  color: #E11D48;
+  background: rgba(225, 29, 72, 0.05);
+}
+
+.dev-user-accordion {
+  margin-top: 10px;
+}
+
+.dev-accordion-summary {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.dev-accordion-summary:hover {
+  color: #E11D48;
+}
+
+.dev-accordion-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.custom-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.custom-input-group label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.custom-input-field, .custom-select-field {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.custom-input-field:focus, .custom-select-field:focus {
+  border-color: #E11D48;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+}
+
+.btn-dev-submit {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-dev-submit:hover {
+  border-color: #E11D48;
+  background: #E11D48;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .login-split-card {
+    flex-direction: column;
+    max-width: 440px;
+    min-height: auto;
+  }
+  .login-hero-side {
+    width: 100%;
+    padding: 36px 24px;
+  }
+  .login-form-side {
+    width: 100%;
+    padding: 32px 24px;
+  }
+}
+
 .login-card {
   width: 100%;
   max-width: 440px;

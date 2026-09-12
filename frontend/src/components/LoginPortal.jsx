@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { api } from '../services/api';
 import { useT } from '../language';
+import { ShieldCheck } from './Icons';
 
 export default function LoginPortal({ onLoginSuccess }) {
   const t = useT();
@@ -60,135 +61,144 @@ export default function LoginPortal({ onLoginSuccess }) {
 
   return (
     <div className="login-portal-overlay">
-      <div className="login-card glass-card">
-        {/* Header */}
-        <div className="login-header" style={{ textAlign: 'left', marginBottom: '22px' }}>
-          <h1 className="login-title" style={{ fontSize: '1.75rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
-            {t('Sign in')}
-          </h1>
-          <p className="login-subtitle" style={{ fontSize: '0.92rem', color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal', marginTop: '4px' }}>
-            {t('Use your Assumption University account.')}
-          </p>
+      <div className="login-split-card">
+        {/* Left Side: Crimson Brand Hero Panel */}
+        <div className="login-hero-side">
+          {/* Folded Corner Ribbon Accent */}
+          <div className="login-hero-ribbon"></div>
+
+          <div className="login-hero-inner">
+            <p className="hero-welcome-sub">{t('Hello,')}</p>
+            <h2 className="hero-welcome-title">{t('welcome to!')}</h2>
+
+            <div className="brand-logo-circle">
+              <ShieldCheck size={42} className="brand-icon-crimson" />
+            </div>
+
+            <h1 className="brand-app-title">Finder Portal</h1>
+            <p className="brand-app-sub">{t('Assumption University Lost & Found System')}</p>
+          </div>
         </div>
 
-        {error && <div className="login-error-banner">{error}</div>}
+        {/* Right Side: Sign In Form & Controls */}
+        <div className="login-form-side">
+          <div className="form-side-header">
+            <h2 className="form-main-title">{t('Sign In')}</h2>
+            <p className="form-main-sub">{t('Hey enter your details to sign in to your account')}</p>
+          </div>
 
-        {/* Primary Action Button: Sign in with Microsoft */}
-        <div style={{ marginBottom: '24px' }}>
-          <button 
-            type="button" 
-            className="btn-microsoft-signin"
-            onClick={handleMicrosoftSignIn}
-            disabled={loading}
-          >
-            {/* 4-Color Microsoft Grid Logo */}
-            <svg viewBox="0 0 21 21" width="20" height="20" style={{ flexShrink: 0 }}>
-              <rect x="1" y="1" width="9" height="9" fill="#F25022" />
-              <rect x="11" y="1" width="9" height="9" fill="#7FBA00" />
-              <rect x="1" y="11" width="9" height="9" fill="#00A4EF" />
-              <rect x="11" y="11" width="9" height="9" fill="#FFB900" />
-            </svg>
-            <span>{t('Sign in with Microsoft')}</span>
-          </button>
-        </div>
+          {error && <div className="login-error-banner">{error}</div>}
 
-        {/* Divider */}
-        <div className="login-divider" style={{ margin: '20px 0 24px' }}>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>dev / test sign-in</span>
-        </div>
-
-        {/* Dev / Test Sign-In Section */}
-        <div style={{ textAlign: 'left' }}>
-          <label className="login-form-label" style={{ display: 'block', marginBottom: '10px' }}>
-            {t('Quick login')}
-          </label>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '18px' }}>
+          {/* Primary Action Button: Sign in with Microsoft */}
+          <div className="primary-auth-block">
             <button 
               type="button" 
-              className="btn btn-glass"
-              style={{ padding: '9px 12px', fontSize: '0.88rem', fontWeight: 600 }}
-              onClick={() => handleQuickLogin('STUDENT')}
+              className="btn-microsoft-primary"
+              onClick={handleMicrosoftSignIn}
               disabled={loading}
             >
-              {t('Student')}
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-glass"
-              style={{ padding: '9px 12px', fontSize: '0.88rem', fontWeight: 600 }}
-              onClick={() => handleQuickLogin('TEACHER')}
-              disabled={loading}
-            >
-              {t('Staff')}
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-glass"
-              style={{ padding: '9px 12px', fontSize: '0.88rem', fontWeight: 600 }}
-              onClick={() => handleQuickLogin('ADMIN')}
-              disabled={loading}
-            >
-              {t('Admin')}
+              {/* 4-Color Microsoft Grid Logo */}
+              <svg viewBox="0 0 21 21" width="22" height="22" className="ms-logo-svg">
+                <rect x="1" y="1" width="9" height="9" fill="#F25022" />
+                <rect x="11" y="1" width="9" height="9" fill="#7FBA00" />
+                <rect x="1" y="11" width="9" height="9" fill="#00A4EF" />
+                <rect x="11" y="11" width="9" height="9" fill="#FFB900" />
+              </svg>
+              <span>{t('Sign in with Microsoft')}</span>
             </button>
           </div>
 
-          {/* Specific user sign in details */}
-          <details style={{ marginTop: '14px' }}>
-            <summary style={{ cursor: 'pointer', fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-              ▼ {t('Or sign in as a specific user')}
-            </summary>
+          {/* Divider */}
+          <div className="login-divider-custom">
+            <span>dev / test sign-in</span>
+          </div>
 
-            <form onSubmit={handleDevSubmit} className="login-form" style={{ marginTop: '14px', gap: '12px' }}>
-              <div className="login-form-group">
-                <label className="login-form-label">{t('Email')}</label>
-                <input
-                  type="email"
-                  className="login-form-input"
-                  placeholder="you@example.edu"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="login-form-group">
-                <label className="login-form-label">{t('Name')}</label>
-                <input
-                  type="text"
-                  className="login-form-input"
-                  placeholder="Dev User"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="login-form-group">
-                <label className="login-form-label">{t('Role')}</label>
-                <select 
-                  className="filter-select" 
-                  style={{ width: '100%', padding: '9px 12px' }}
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  disabled={loading}
-                >
-                  <option value="STUDENT">{t('Student')}</option>
-                  <option value="TEACHER">{t('Staff / Teacher')}</option>
-                  <option value="ADMIN">{t('Admin')}</option>
-                </select>
-              </div>
-
+          {/* Dev / Test Sign-In Section */}
+          <div className="dev-section-wrapper">
+            <label className="dev-label-title">{t('Quick login')}</label>
+            
+            <div className="dev-quick-grid">
               <button 
-                type="submit" 
-                className="btn btn-glass w-full"
-                style={{ marginTop: '8px', padding: '9px', fontWeight: 600 }}
+                type="button" 
+                className="btn-dev-role"
+                onClick={() => handleQuickLogin('STUDENT')}
                 disabled={loading}
               >
-                {loading ? t('Signing in...') : t('Sign in (dev)')}
+                {t('Student')}
               </button>
-            </form>
-          </details>
+              <button 
+                type="button" 
+                className="btn-dev-role"
+                onClick={() => handleQuickLogin('TEACHER')}
+                disabled={loading}
+              >
+                {t('Staff')}
+              </button>
+              <button 
+                type="button" 
+                className="btn-dev-role"
+                onClick={() => handleQuickLogin('ADMIN')}
+                disabled={loading}
+              >
+                {t('Admin')}
+              </button>
+            </div>
+
+            {/* Specific user sign in details */}
+            <details className="dev-user-accordion">
+              <summary className="dev-accordion-summary">
+                ▼ {t('Or sign in as a specific user')}
+              </summary>
+
+              <form onSubmit={handleDevSubmit} className="dev-accordion-form">
+                <div className="custom-input-group">
+                  <label>{t('Email')}</label>
+                  <input
+                    type="email"
+                    className="custom-input-field"
+                    placeholder="you@example.edu"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="custom-input-group">
+                  <label>{t('Name')}</label>
+                  <input
+                    type="text"
+                    className="custom-input-field"
+                    placeholder="Dev User"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="custom-input-group">
+                  <label>{t('Role')}</label>
+                  <select 
+                    className="custom-select-field" 
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    disabled={loading}
+                  >
+                    <option value="STUDENT">{t('Student')}</option>
+                    <option value="TEACHER">{t('Staff / Teacher')}</option>
+                    <option value="ADMIN">{t('Admin')}</option>
+                  </select>
+                </div>
+
+                <button 
+                  type="submit" 
+                  className="btn-dev-submit"
+                  disabled={loading}
+                >
+                  {loading ? t('Signing in...') : t('Sign in (dev)')}
+                </button>
+              </form>
+            </details>
+          </div>
         </div>
       </div>
     </div>
