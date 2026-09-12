@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
+import { sendMatchNotificationEmail } from '../services/emailService';
 
 const prisma = new PrismaClient();
 
@@ -34,7 +35,13 @@ export async function reviewMatch(req: AuthenticatedRequest, res: Response) {
   }
 
   try {
-    const match = await prisma.match.findUnique({ where: { id } });
+    const match = await prisma.match.findUnique({
+      where: { id },
+      include: {
+        lostItem: { include: { reporter: { select: { name: true, email: true } } } },
+        foundItem: { include: { reporter: { select: { name: true, email: true } } } }
+      }
+    });
 
     if (!match) {
       return res.status(404).json({ error: 'Match record not found' });
@@ -56,6 +63,17 @@ export async function reviewMatch(req: AuthenticatedRequest, res: Response) {
         where: { id: match.foundItemId },
         data: { status: 'MATCHED' }
       });
+
+      // Send match notification email to lost item reporter asynchronously
+      if (match.lostItem?.reporter?.email) {
+        sendMatchNotificationEmail(
+          match.lostItem.reporter.email,
+          match.lostItem.reporter.name || 'AU Student',
+          match.lostItem.title,
+          match.foundItem?.title || 'Found Item',
+          match.foundItem?.location || 'Campus Location'
+        );
+      }
     }
 
     return res.json(updatedMatch);

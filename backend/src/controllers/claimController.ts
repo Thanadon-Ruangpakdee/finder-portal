@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../middleware/auth';
+import { sendClaimApprovalEmail, sendClaimRejectionEmail } from '../services/emailService';
 
 const prisma = new PrismaClient();
 
@@ -100,7 +101,10 @@ export async function reviewClaim(req: AuthenticatedRequest, res: Response) {
   try {
     const claim = await prisma.claim.findUnique({
       where: { id },
-      include: { item: true }
+      include: { 
+        item: true,
+        claimant: { select: { id: true, name: true, email: true } }
+      }
     });
 
     if (!claim) {
@@ -140,6 +144,25 @@ export async function reviewClaim(req: AuthenticatedRequest, res: Response) {
           reviewerId
         }
       });
+
+      // 3. Send approval email notification asynchronously
+      if (claim.claimant?.email) {
+        sendClaimApprovalEmail(
+          claim.claimant.email,
+          claim.claimant.name || 'AU Student',
+          claim.item.title,
+          claim.item.location
+        );
+      }
+    } else if (finalStatus === 'REJECTED') {
+      // Send rejection email notification asynchronously
+      if (claim.claimant?.email) {
+        sendClaimRejectionEmail(
+          claim.claimant.email,
+          claim.claimant.name || 'AU Student',
+          claim.item.title
+        );
+      }
     }
 
     return res.json(updatedClaim);
