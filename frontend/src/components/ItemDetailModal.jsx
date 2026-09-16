@@ -56,7 +56,7 @@ export default function ItemDetailModal({
       },
       body: JSON.stringify({
         location: item.location,
-        timestamp: item.createdAt || item.date || new Date().toISOString()
+        timestamp: item.date || item.createdAt || new Date().toISOString()
       })
     })
       .then(res => res.json())
@@ -232,7 +232,7 @@ export default function ItemDetailModal({
               <Calendar size={18} className="meta-card-icon text-blue" />
               <div className="meta-card-content">
                 <div className="meta-card-label">{t('Date & Time')}</div>
-                <div className="meta-card-val">{formatDate(item.createdAt || item.date)}</div>
+                <div className="meta-card-val">{formatDate(item.date || item.createdAt)}</div>
               </div>
             </div>
 

@@ -71,7 +71,7 @@ export async function getItemById(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function createItem(req: AuthenticatedRequest, res: Response) {
-  const { title, description, location, type, category: bodyCategory, imagePreset, imageUrl } = req.body;
+  const { title, description, location, type, category: bodyCategory, imagePreset, imageUrl, date } = req.body;
   const reporterId = req.user?.id;
 
   if (!title || !description || !location || !type || !reporterId) {
@@ -85,6 +85,7 @@ export async function createItem(req: AuthenticatedRequest, res: Response) {
     // 2. Select final category: Use user selection, fallback to AI suggestion
     const finalCategory = bodyCategory && bodyCategory !== 'Other' ? bodyCategory : aiResult.category;
     const aiTagsString = aiResult.tags.join(',');
+    const eventDate = date ? new Date(date) : new Date();
 
     // 3. Create database entry
     const newItem = await prisma.item.create({
@@ -98,7 +99,8 @@ export async function createItem(req: AuthenticatedRequest, res: Response) {
         imagePreset,
         imageUrl,
         aiTags: aiTagsString,
-        reporterId
+        reporterId,
+        createdAt: isNaN(eventDate.getTime()) ? new Date() : eventDate
       },
       include: {
         reporter: { select: { id: true, name: true, email: true } }

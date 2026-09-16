@@ -73,7 +73,7 @@ export default function ItemCard({ item, onClick }) {
           
           <div className="meta-item date-meta">
             <Calendar size={13} className="meta-icon" />
-            <span>{formatDate(item.createdAt || item.date)}</span>
+            <span>{formatDate(item.date || item.createdAt)}</span>
           </div>
         </div>
 
