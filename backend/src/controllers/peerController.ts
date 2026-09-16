@@ -55,6 +55,27 @@ export async function getItemsByLocation(req: Request, res: Response) {
   }
 }
 
+function sanitizeRoomForSpaceReserve(rawLocation: string): string {
+  if (!rawLocation) return '';
+  // 1. Remove " (SpaceReserve)" suffix
+  let cleaned = rawLocation.replace(/\s*\(SpaceReserve\)/gi, '').trim();
+  
+  // 2. Extract known room names if nested
+  const match = cleaned.match(/(CL-2-04|CL-2-05|CA Edit Suite 2|CA Edit Suite 3|CA Studio 1|CA Screening Room)/i);
+  if (match) {
+    // Return exact casing matching SpaceReserve API
+    const found = match[1].toLowerCase();
+    if (found === 'cl-2-04') return 'CL-2-04';
+    if (found === 'cl-2-05') return 'CL-2-05';
+    if (found === 'ca edit suite 2') return 'CA Edit Suite 2';
+    if (found === 'ca edit suite 3') return 'CA Edit Suite 3';
+    if (found === 'ca studio 1') return 'CA Studio 1';
+    if (found === 'ca screening room') return 'CA Screening Room';
+    return match[1];
+  }
+  return cleaned;
+}
+
 // 2. Consume: Fetch who occupied the room at the time an item was lost/found
 export async function checkPeerBookings(req: Request, res: Response) {
   const { location, timestamp } = req.body;
@@ -64,8 +85,9 @@ export async function checkPeerBookings(req: Request, res: Response) {
   }
 
   const config = getConfig();
+  const targetRoom = sanitizeRoomForSpaceReserve(String(location));
 
-  console.log(`[Peer API] Querying SpaceReserve active bookings at location: "${location}"...`);
+  console.log(`[Peer API] Querying SpaceReserve active bookings at room: "${targetRoom}" (raw: "${location}")...`);
 
   try {
     // Perform outgoing HTTP request to SpaceReserve REST API
@@ -74,7 +96,7 @@ export async function checkPeerBookings(req: Request, res: Response) {
     const timeoutId = setTimeout(() => controller.abort(), 3500); // 3.5s timeout
 
     const response = await fetch(
-      `${config.SPACE_RESERVE_API_URL}/external/bookings/active-at?room=${encodeURIComponent(location)}&at=${encodeURIComponent(timestamp)}`,
+      `${config.SPACE_RESERVE_API_URL}/external/bookings/active-at?room=${encodeURIComponent(targetRoom)}&at=${encodeURIComponent(timestamp)}`,
       {
         method: 'GET',
         headers: {
