@@ -89,13 +89,22 @@ export async function checkPeerBookings(req: Request, res: Response) {
 
     if (response.ok) {
       const data: any = await response.json();
-      const hasBooking = data && (data.active !== false) && (data.bookerName || data.bookedBy || (data.booking && (data.booking.bookerName || data.booking.bookedBy)));
+      const resObj = data.reservation || data.booking || (data.active !== false ? data : null);
+      
+      const hasBooking = resObj && typeof resObj === 'object' && resObj !== null && (
+        resObj.bookerName || resObj.bookedBy || resObj.userName || resObj.user || resObj.bookerEmail || resObj.id || resObj.title
+      );
 
       if (hasBooking) {
         return res.json({
           source: 'Live SpaceReserve API',
           active: true,
-          booking: data.booking || data
+          booking: {
+            bookerName: resObj.bookerName || resObj.bookedBy || resObj.userName || resObj.user?.name || resObj.name || 'Active Booker',
+            bookerEmail: resObj.bookerEmail || resObj.userEmail || resObj.user?.email || resObj.email || 'N/A',
+            activeFrom: resObj.activeFrom || resObj.startTime || resObj.start || resObj.from || resObj.createdAt,
+            activeTo: resObj.activeTo || resObj.endTime || resObj.end || resObj.to
+          }
         });
       } else {
         return res.json({
