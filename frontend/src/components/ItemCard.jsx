@@ -14,12 +14,18 @@ export default function ItemCard({ item, onClick }) {
   const isFound = item.type === 'FOUND';
   const hasPendingClaim = item.claims && item.claims.some(c => c.status === 'PENDING');
 
-  // Format date helper
+  // Format date & time helper
   const formatDate = (isoString) => {
     if (!isoString) return t('Recently');
     const d = new Date(isoString);
     if (isNaN(d.getTime())) return t('Recently');
-    return d.toLocaleDateString(localeFor(lang), { month: 'short', day: 'numeric', year: 'numeric' });
+    return d.toLocaleString(localeFor(lang), {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   return (

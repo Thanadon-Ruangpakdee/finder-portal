@@ -180,6 +180,8 @@ const TH = {
   'Analyzing...': 'กำลังวิเคราะห์...',
   'Analyze with AI': 'วิเคราะห์ด้วย AI',
   'Item Name / Headline *': 'ชื่อของ / หัวข้อ *',
+  'Date & Time Found *': 'วันและเวลาที่เก็บได้ *',
+  'Date & Time Lost *': 'วันและเวลาที่ทำหาย *',
   'e.g. Apple MacBook Pro 14 inch or Leather Wallet':
     'เช่น Apple MacBook Pro 14 นิ้ว หรือ กระเป๋าสตางค์หนัง',
   'Category *': 'หมวดหมู่ *',

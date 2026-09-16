@@ -37,6 +37,13 @@ export default function ReportModal({
   const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
   const [aiSuccessMessage, setAiSuccessMessage] = useState('');
 
+  // Event Date & Time State
+  const [eventDateTime, setEventDateTime] = useState(() => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16); // format: YYYY-MM-DDTHH:mm
+  });
+
   const samplePhotoPresets = [
     { label: 'MacBook', url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80' },
     { label: 'Headphones', url: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800&auto=format&fit=crop&q=80' },
@@ -104,7 +111,7 @@ export default function ReportModal({
       description: description.trim(),
       category,
       location: finalLocation || 'Campus Common Area',
-      date: new Date().toISOString(),
+      date: eventDateTime ? new Date(eventDateTime).toISOString() : new Date().toISOString(),
       photoUrl: photoUrl.trim() || 'https://images.unsplash.com/photo-1586769852044-692d6e3703f0?w=800&auto=format&fit=crop&q=80',
       status: 'OPEN',
       reportedBy: {
@@ -210,6 +217,20 @@ export default function ReportModal({
                 placeholder={t('e.g. Apple MacBook Pro 14 inch or Leather Wallet')}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+
+            {/* Date & Time Found / Lost Picker */}
+            <div className="input-group">
+              <label className="input-label">
+                {type === 'FOUND' ? t('Date & Time Found *') : t('Date & Time Lost *')}
+              </label>
+              <input
+                type="datetime-local"
+                className="input-field"
+                value={eventDateTime}
+                onChange={(e) => setEventDateTime(e.target.value)}
                 required
               />
             </div>
