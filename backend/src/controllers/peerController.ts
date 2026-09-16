@@ -92,7 +92,7 @@ export async function checkPeerBookings(req: Request, res: Response) {
       const resObj = data.reservation || data.booking || (data.active !== false ? data : null);
       
       const hasBooking = resObj && typeof resObj === 'object' && resObj !== null && (
-        resObj.bookerName || resObj.bookedBy || resObj.userName || resObj.user || resObj.bookerEmail || resObj.id || resObj.title
+        resObj.organizer || resObj.bookerName || resObj.bookedBy || resObj.userName || resObj.user || resObj.bookerEmail || resObj.id
       );
 
       if (hasBooking) {
@@ -100,8 +100,8 @@ export async function checkPeerBookings(req: Request, res: Response) {
           source: 'Live SpaceReserve API',
           active: true,
           booking: {
-            bookerName: resObj.bookerName || resObj.bookedBy || resObj.userName || resObj.user?.name || resObj.name || 'Active Booker',
-            bookerEmail: resObj.bookerEmail || resObj.userEmail || resObj.user?.email || resObj.email || 'N/A',
+            bookerName: resObj.organizer?.name || resObj.bookerName || resObj.bookedBy || resObj.userName || resObj.user?.name || resObj.name || 'Active Booker',
+            bookerEmail: resObj.organizer?.email || resObj.bookerEmail || resObj.userEmail || resObj.user?.email || resObj.email || 'N/A',
             activeFrom: resObj.activeFrom || resObj.startTime || resObj.start || resObj.from || resObj.createdAt,
             activeTo: resObj.activeTo || resObj.endTime || resObj.end || resObj.to
           }
