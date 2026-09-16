@@ -24,6 +24,7 @@ function mapItemResponse(item) {
   }
   return {
     ...item,
+    date: item.date || item.createdAt,
     photoUrl: item.imageUrl || item.photoUrl || 'https://images.unsplash.com/photo-1586769852044-692d6e3703f0?w=800&auto=format&fit=crop&q=80',
     aiTags: tagsArray
   };
@@ -103,6 +104,7 @@ export const api = {
       location: itemData.location,
       type: itemData.type,
       category: itemData.category,
+      date: itemData.date,
       imageUrl: itemData.photoUrl,
       imagePreset: itemData.imagePreset
     };
