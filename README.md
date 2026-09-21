@@ -8,9 +8,9 @@
 
 | Student ID | Full Name | Role & Responsibility |
 | :--- | :--- | :--- |
-| **6610308** | **Thanadon Ruangpakdee** | Full-Stack Developer & UI/UX Architect |
-| **6610936** | **Thanakrit Kodklangdon** | Backend Engineer & Database Systems |
-| **6610387** | **Kitirat Pisithaporn** | System Integrator & DevOps |
+| **6610308** | **Thanadon Ruangpakdee** | 
+| **6610936** | **Thanakrit Kodklangdon** | 
+| **6610387** | **Kitirat Pisithaporn** |
 
 ---
 
