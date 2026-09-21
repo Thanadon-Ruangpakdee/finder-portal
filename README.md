@@ -1,6 +1,8 @@
 # 🔍 FinderPortal — AU Campus Lost & Found System
 
-> **FinderPortal** is an intelligent, secure, and modern Lost & Found Management System designed specifically for **Assumption University (ABAC)** students, faculty, and campus security officers. The portal leverages **Google Gemini AI** for automated visual tagging and item classification, integrates with **Microsoft Active Directory (AD SSO)** for secure identity verification, and features interactive claim verification workflows.
+> **Course:** CSX4110 Business Application Development  
+> **Institution:** Assumption University of Thailand (ABAC)  
+> **Live Production Application:** [https://thanadon-bad2026.koreacentral.cloudapp.azure.com/project/](https://thanadon-bad2026.koreacentral.cloudapp.azure.com/project/)
 
 ---
 
@@ -14,79 +16,107 @@
 
 ---
 
-## 🌟 Key Features
+## 📽️ Interactive Feature Walkthrough (GIF Demos & Screenshots)
 
-- 🔐 **AU Microsoft Active Directory SSO & Role-Based Access Control**:
-  - Supports 3 distinct user roles: **Student**, **Teacher/Staff**, and **Admin**.
-  - Securely displays reporter identity and verified AU student email credentials (`@student.uni.edu` / `@ms.au.edu`) to prevent false claims.
+### 1. Single Sign-On & Discovery Feed
+Authentication via Microsoft Entra ID (OIDC OAuth2 SSO) into a modern Crimson Glassmorphism UI with real-time keyword search, category, location, and status filtering.
 
-- 🤖 **Gemini AI Visual Tagging & Auto-Classification**:
-  - Powered by **Google Gemini AI** to automatically analyze item photos and descriptions.
-  - Automatically generates metadata tags (AI Visual Tags) and classifies items into categories (*Electronics*, *Wallets & Bags*, *IDs & Cards*, *Keys*, *Bottles & Tumblers*, *Books & Documents*, *Accessories*).
+![Single Sign-On & Discovery Feed Demo](docs/media/demo_login_feed.gif)
+*Figure 1: Microsoft SSO & Real-Time Discovery Feed*
 
-- 📸 **Multi-Photo Carousel & Fullscreen Lightbox Viewer**:
-  - Supports multiple attached photos per report with smooth navigation arrows (`<` / `>`) and pagination dots.
-  - Click any photo to expand into a high-definition **Glassmorphism Lightbox Modal** with keyboard controls (`←` / `→` / `Esc`) and thumbnail filmstrip navigation.
-
-- 📍 **SpaceReserve Peer API Integration (Room Intelligence)**:
-  - Connects with campus room scheduling services to check room reservation logs at the time an item was lost or found.
-
-- 🛡️ **Proof of Ownership Claim Verification System**:
-  - Allows students to submit hidden proof of ownership (e.g., passcode lock pattern, serial numbers, specific stickers).
-  - Staff and teachers review, approve, or reject claims via the Staff Management Dashboard.
-
-- 🔔 **"Did You Find This Lost Item?" Action Workflow**:
-  - Enables helpful campus members viewing a **Lost Report** to submit details on where they turned the item in (e.g., *"Left at Security Desk, CL Building 1st Floor"*), instantly notifying the owner and security staff.
-
-- 📊 **Organized Status & Feed Separation**:
-  - Clearly segregates **Active Found Items**, **Lost Reports**, and **Reunited (Claimed)** items to prevent clutter.
+![Discovery Feed Screenshot](docs/media/hero_discovery_feed.png)
+*Figure 2: Discovery Feed High-Resolution View*
 
 ---
 
-## 📸 App Screenshots
+### 2. Google Gemini AI Vision Tagging & Auto-Classification
+Upload item photos to automatically analyze visual features using **Google Gemini 1.5/2.0 Flash Vision API**, extracting metadata tags and auto-selecting item categories.
 
-### 1. Main Dashboard & Filter Feed
-![Browse Dashboard](docs/screenshots/browse_dashboard.png)
+![Gemini AI Vision Tagging Demo](docs/media/demo_gemini_ai_tagging.gif)
+*Figure 3: Gemini Multimodal AI Auto-Tagging Flow*
 
-### 2. Item Detail Modal & Crisp Card Layout
-![Item Detail Modal](docs/screenshots/item_detail_modal.png)
+![Report Item Modal Screenshot](docs/media/report_item_gemini_ai.png)
+*Figure 4: AI Analysis & Item Reporting Modal*
+
+---
+
+### 3. SpaceReserve Bilateral Peer API (Room Intelligence)
+Interoperable Service-to-Service REST API integrated with **SpaceReserve** (Campus Room Booking System). Click **"Check Active Booker"** to query active room reservations at the exact timestamp an item was found.
+
+![SpaceReserve Peer API Demo](docs/media/demo_spacereserve_peer_api.gif)
+*Figure 5: SpaceReserve Active Booker Resolution (`🟢 Active Booking Found`)*
+
+![SpaceReserve Active Booker Screenshot](docs/media/spacereserve_active_booker.png)
+*Figure 6: Live SpaceReserve Room Intelligence Result*
+
+---
+
+### 4. AI Matcher Engine & Teacher Verification Dashboard
+Automated NLP matching algorithm calculates similarity scores between unresolved Lost reports and newly logged Found items, allowing faculty members to verify ownership proof and approve claims.
+
+![AI Matcher & Teacher Dashboard Demo](docs/media/demo_ai_matcher_teacher.gif)
+*Figure 7: AI Matcher Similarity Scoring & Teacher Claim Approval*
+
+![Teacher Dashboard Screenshot](docs/media/teacher_admin_dashboard.png)
+*Figure 8: Teacher/Admin Management Dashboard*
+
+---
+
+## 🌟 Core System Features
+
+- 🔐 **AU Microsoft Active Directory SSO & Role-Based Access Control**:
+  - 3 distinct user roles: `STUDENT`, `TEACHER`, and `ADMIN`.
+  - Enforces `authenticateToken` and `requireRole` middleware with verified `@au.edu` credentials.
+
+- 🤖 **Gemini AI Visual Tagging & Auto-Classification**:
+  - Multimodal Vision API automatically generates item tags and assigns categories (*Electronics*, *Wallets & Bags*, *IDs & Cards*, *Keys*, *Bottles & Tumblers*, *Books & Documents*, *Accessories*).
+
+- 🔑 **Azure Key Vault Central Secret Management**:
+  - Secure runtime authentication using `@azure/keyvault-secrets` and `DefaultAzureCredential` to load secrets like `DATABASE_URL` and `JWT_SECRET` directly in memory without plaintext `.env` storage.
+
+- 📍 **Bilateral Peer API Integration (SpaceReserve)**:
+  - **Expose:** `GET /api/v1/items/by-location` protected via `x-api-key`.
+  - **Consume:** `POST /api/v1/peer/check-bookings` sending authenticated requests to SpaceReserve `/external/bookings/active-at`.
+
+- 🛡️ **Proof of Ownership Claim Verification Flow**:
+  - Students submit hidden ownership proof (passcodes, serial numbers, unique scratches).
+  - Teachers review and approve claims, updating item status to `CLAIMED`.
 
 ---
 
 ## 🛠️ Tech Stack & Architecture
 
-- **Frontend**: React.js (Vite), Vanilla CSS (Custom Design System & Tokens), Lucide Icons
-- **Backend**: Node.js, Express.js, TypeScript, Prisma ORM, PostgreSQL
-- **AI Integration**: Google Gemini AI API (Multimodal Vision & Text Analysis)
-- **Cloud & Infrastructure**: Azure Key Vault (Centralized Secret Management), Azure Virtual Machines, Docker & Docker Compose
+- **Frontend**: React.js (Vite), Custom Crimson Glassmorphism CSS System, Lucide Icons
+- **Backend**: Node.js, Express.js, TypeScript, Prisma ORM, SQLite (`dev.db`)
+- **AI Engine**: Google Gemini 1.5/2.0 Flash Vision API
+- **Cloud & DevOps**: Azure Key Vault, Azure VPS, Docker & Docker Compose, Nginx Reverse Proxy with Let's Encrypt SSL/TLS
 
 ---
 
-## 🌐 Peer API Documentation
+## 🌐 Bilateral Peer API Specification
 
-### 1. Consuming Classmate's Peer API
-- **Partner System**: **SpaceReserve** (Campus Room & Facility Reservation System)
+### 1. Consumed Endpoint (SpaceReserve Integration)
+- **Partner System**: **SpaceReserve** (Campus Facility Booking System)
 - **Endpoint Consumed**: `GET /external/bookings/active-at?room={roomLocation}&at={timestamp}`
-- **Authentication Header**: `x-api-key: {SPACE_RESERVE_PEER_KEY}`
-- **Data Fetched**: Active room reservation logs, booker name, student email, and reservation time frame.
-- **Application Purpose**: Correlates lost item report locations with room reservation logs to identify occupants who scheduled the room at the exact time an item went missing.
+- **Authentication Header**: `x-api-key: {THEIR_PEER_API_KEY}`
+- **Response Format**: `{"room":"CA Edit Suite 3", "reservation":{"organizer":{"name":"WARACHAI ARANCHOT", "email":"u6610996@au.edu"}}}`
 
-### 2. Exposed Endpoint for Classmates
-- **Endpoint Exposed**: `GET /api/v1/peer/found-items`
-- **Query Parameters**: `location` (string, required), `since` (ISO Date string, optional)
-- **Authentication Header**: `x-api-key: {FINDER_PORTAL_PEER_KEY}`
-- **Data Provided**: List of active unclaimed found items recorded at that location (`id`, `title`, `description`, `category`, `location`, `createdAt`).
-- **Application Purpose**: Allows partner campus applications (e.g. SpaceReserve) to query whether items were found inside a room before a student checks into their reserved study pod/lab.
+### 2. Exposed Endpoint (For Campus Partners)
+- **Endpoint Exposed**: `GET /api/v1/items/by-location`
+- **Query Parameters**: `location` (required), `since` (optional)
+- **Authentication Header**: `x-api-key: {MY_PEER_API_KEY}`
+- **Response Data**: Active found items recorded at that room location (`id`, `title`, `description`, `category`, `location`, `createdAt`).
 
-## 🚀 How to Run Locally
+---
+
+## 🚀 Local Development Setup
 
 ### Prerequisites
 - **Node.js**: v18.0.0 or higher
-- **npm** or **yarn**
+- **npm**
 
 ### 1. Install Dependencies
 ```bash
-# Clone the repository
 git clone https://github.com/Thanadon-Ruangpakdee/finder-portal.git
 cd finder-portal
 
@@ -103,13 +133,13 @@ npm run dev --prefix backend
 npm run dev --prefix frontend
 ```
 
-Access the application in your browser at: **`http://localhost:5173/project/`**
+Access the application locally at: **`http://localhost:5173/project/`**
 
 ---
 
 ## 🐳 Docker Deployment
 
-To build and run the production environment using Docker Compose:
+To build and launch the production container environment:
 
 ```bash
 docker compose up -d --build
