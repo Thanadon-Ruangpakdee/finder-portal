@@ -6,8 +6,8 @@
 
 ## 👥 Team Members
 
-| Student ID | Full Name | Role & Responsibility |
-| :--- | :--- | :--- |
+| Student ID | Full Name | 
+| :--- | :--- | 
 | **6610308** | **Thanadon Ruangpakdee** | 
 | **6610936** | **Thanakrit Kodklangdon** | 
 | **6610387** | **Kitirat Pisithaporn** |
