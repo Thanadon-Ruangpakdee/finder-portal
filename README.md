@@ -1,8 +1,7 @@
 # 🔍 FinderPortal — AU Campus Lost & Found System
 
 > **Course:** CSX4110 Business Application Development  
-> **Institution:** Assumption University of Thailand (ABAC)  
-> **Live Production Application:** [https://thanadon-bad2026.koreacentral.cloudapp.azure.com/project/](https://thanadon-bad2026.koreacentral.cloudapp.azure.com/project/)
+> **Institution:** Assumption University of Thailand (ABAC)
 
 ---
 
